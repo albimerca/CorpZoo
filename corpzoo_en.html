@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CorpZoo</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0a0a;--white:#f5f0e8;--yellow:#f5c842;--green:#2dbe6c;--red:#e84040;--purple:#7c5cbf;--gray:#1e1e1e;--gray2:#2a2a2a;--pixel:'Press Start 2P',monospace;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--sans);overflow-x:hidden;cursor:none}
+.cursor{width:12px;height:12px;background:var(--yellow);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);clip-path:polygon(0 0,100% 0,100% 50%,50% 50%,50% 100%,0 100%)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:var(--black);border-bottom:1px solid #222}
+.nav-logo{font-family:var(--pixel);font-size:12px;color:var(--yellow);letter-spacing:2px}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--white);text-decoration:none;font-family:var(--mono);font-size:12px;opacity:0.6;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--yellow)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 40px 60px;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,200,66,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,200,66,.04) 1px,transparent 1px);background-size:40px 40px}
+.hero-tag{font-family:var(--mono);font-size:11px;color:var(--yellow);letter-spacing:3px;text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp .6s .2s forwards}
+.hero h1{font-family:var(--pixel);font-size:clamp(24px,5vw,56px);line-height:1.5;margin-bottom:16px;opacity:0;animation:fadeUp .6s .4s forwards}
+.hero h1 span{color:var(--yellow)}
+.hero-sub{font-family:var(--mono);font-size:14px;color:rgba(245,240,232,.5);max-width:500px;line-height:1.7;margin-bottom:48px;opacity:0;animation:fadeUp .6s .6s forwards}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .6s .8s forwards}
+.btn{font-family:var(--pixel);font-size:10px;padding:14px 24px;border:2px solid var(--white);background:transparent;color:var(--white);cursor:none;letter-spacing:1px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--white);color:var(--black)}
+.btn-primary{background:var(--yellow);color:var(--black);border-color:var(--yellow)}
+.btn-primary:hover{background:transparent;color:var(--yellow)}
+.hero-scroll{position:absolute;bottom:32px;font-family:var(--pixel);font-size:8px;color:rgba(245,240,232,.3);animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+section{padding:100px 40px;max-width:1200px;margin:0 auto}
+.section-label{font-family:var(--pixel);font-size:9px;color:var(--yellow);letter-spacing:3px;margin-bottom:16px;display:block}
+.section-title{font-family:var(--pixel);font-size:clamp(18px,3vw,28px);line-height:1.5;margin-bottom:48px}
+.corpdex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.dex-card{background:var(--gray);border:2px solid #333;padding:20px 16px;cursor:none;transition:all .15s;position:relative;overflow:hidden}
+.dex-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--yellow);transform:scaleX(0);transition:transform .2s;transform-origin:left}
+.dex-card:hover{border-color:var(--yellow);transform:translateY(-2px)}
+.dex-card:hover::before{transform:scaleX(1)}
+.dex-card.active{border-color:var(--yellow);background:#1a1a00}
+.dex-num{font-family:var(--pixel);font-size:8px;color:#555;margin-bottom:12px}
+.dex-emoji{font-size:28px;margin-bottom:10px;display:block}
+.dex-name{font-family:var(--mono);font-size:12px;font-weight:700;margin-bottom:4px}
+.dex-latin{font-family:var(--mono);font-size:9px;color:#666;font-style:italic}
+.dex-panel{display:none;margin-top:16px;background:var(--gray);border:2px solid var(--yellow);padding:32px;position:relative;animation:panelIn .2s ease}
+.dex-panel.open{display:grid;grid-template-columns:180px 1fr;gap:32px}
+@keyframes panelIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.panel-close{position:absolute;top:16px;right:16px;font-family:var(--pixel);font-size:9px;color:#666;background:none;border:none;cursor:none}
+.panel-close:hover{color:var(--yellow)}
+.panel-left{text-align:center}
+.panel-big-emoji{font-size:56px;margin-bottom:16px;display:block}
+.panel-name{font-family:var(--pixel);font-size:11px;color:var(--yellow);margin-bottom:6px}
+.panel-latin{font-family:var(--mono);font-size:9px;color:#666;font-style:italic;margin-bottom:20px}
+.panel-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.ptag{font-family:var(--pixel);font-size:7px;padding:4px 8px;border:1px solid #444;color:#888}
+.pfield{margin-bottom:20px}
+.pfield-label{font-family:var(--pixel);font-size:8px;color:var(--yellow);letter-spacing:2px;margin-bottom:8px;display:block}
+.pfield-text{font-family:var(--mono);font-size:12px;color:rgba(245,240,232,.75);line-height:1.7}
+.capo-box{border-left:3px solid var(--purple);padding:12px 16px;font-family:var(--mono);font-size:12px;color:rgba(245,240,232,.75);line-height:1.7;font-style:italic;background:rgba(124,92,191,.08)}
+.slack-wrap{background:#1a1d21;border-radius:10px;overflow:hidden;border:1px solid #111;display:flex;height:560px;font-family:'Space Mono',monospace}
+.s-sidebar{width:210px;min-width:210px;background:#19171d;display:flex;flex-direction:column;border-right:1px solid #2a2d31}
+.s-ws{padding:11px 12px 10px;border-bottom:1px solid #2a2d31;display:flex;align-items:center;gap:8px}
+.s-ws-logo{width:26px;height:26px;background:linear-gradient(135deg,#6b3fa0,#1264a3);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:800}
+.s-ws-name{color:#fff;font-size:13px;font-weight:700}
+.s-ws-dot{width:7px;height:7px;background:#2bac76;border-radius:50%;margin-left:auto}
+.s-scroll{flex:1;overflow-y:auto}
+.s-scroll::-webkit-scrollbar{width:3px}
+.s-scroll::-webkit-scrollbar-thumb{background:#3a3d42}
+.s-stitle{padding:12px 10px 3px 12px;font-size:11px;font-weight:700;color:#97949f;display:flex;align-items:center;justify-content:space-between}
+.s-item{display:flex;align-items:center;gap:6px;padding:3px 8px 3px 12px;cursor:pointer;border-radius:4px;margin:0 3px;color:#97949f;font-size:13px}
+.s-item:hover{background:#222529;color:#d1d2d3}
+.s-item.active{background:#1264a3;color:#fff}
+.s-hash{font-size:14px;font-weight:700}
+.s-dot{width:6px;height:6px;border-radius:50%;margin-left:auto}
+.s-dot.on{background:#2bac76}
+.s-dot.away{background:transparent;border:1.5px solid #97949f}
+.s-badge{margin-left:auto;background:#cd2553;color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 5px}
+.s-me{border-top:1px solid #2a2d31;padding:8px 12px;display:flex;align-items:center;gap:7px}
+.s-me-av{width:26px;height:26px;border-radius:5px;background:#1264a3;display:flex;align-items:center;justify-content:center;font-size:16px;position:relative}
+.s-me-dot{width:8px;height:8px;background:#2bac76;border-radius:50%;position:absolute;bottom:-2px;right:-2px;border:2px solid #19171d}
+.s-me-name{color:#d1d2d3;font-size:13px;font-weight:700}
+.s-me-status{color:#97949f;font-size:11px}
+.s-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.s-header{background:#1a1d21;border-bottom:1px solid #2a2d31;padding:9px 14px;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.s-ch-hash{color:#97949f;font-size:16px;font-weight:700}
+.s-ch-name{color:#fff;font-size:14px;font-weight:700}
+.s-ch-div{width:1px;height:14px;background:#3a3d42;margin:0 3px}
+.s-ch-topic{color:#97949f;font-size:12px}
+.s-icons{margin-left:auto;display:flex;gap:12px}
+.s-icon{color:#97949f;font-size:14px}
+.s-messages{flex:1;padding:12px 14px 6px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.s-messages::-webkit-scrollbar{width:4px}
+.s-messages::-webkit-scrollbar-thumb{background:#3a3d42}
+.s-datediv{display:flex;align-items:center;gap:7px;margin:4px 0 12px}
+.s-datediv hr{flex:1;border:none;border-top:1px solid #2a2d31}
+.s-datediv span{color:#97949f;font-size:11px;font-weight:700}
+.s-mrow{display:flex;gap:9px;padding:2px 3px;border-radius:4px}
+.s-mrow:hover{background:#222529}
+.s-av{width:34px;height:34px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;margin-top:2px}
+.av-kiwi{background:#5a3e2b}.av-duck{background:#1264a3}.av-dodo{background:#6b3fa0}
+.s-avph{width:34px;flex-shrink:0}
+.s-mbody{flex:1;min-width:0}
+.s-mmeta{display:flex;align-items:baseline;gap:7px;margin-bottom:2px}
+.s-mname{font-size:14px;font-weight:700}
+.nk{color:#78c06a}.nd{color:#5fb6f0}.ndo{color:#b89ddc}
+.s-mts{font-size:10px;color:#6b6f76}
+.s-mtext{font-size:13.5px;color:#d1d2d3;line-height:1.44}
+.s-cts{font-size:10px;color:#6b6f76;margin-bottom:2px}
+.s-lcard{margin-top:5px;border-left:3px solid #3a3d41;padding:5px 9px;border-radius:0 4px 4px 0;background:#1e2126}
+.s-lsrc{font-size:11px;color:#97949f}
+.s-ltitle{font-size:13px;font-weight:700;color:#d1d2d3}
+.s-ldesc{font-size:11px;color:#97949f;margin-top:2px}
+.s-gap{margin-top:10px}
+.s-typing{padding:3px 14px 6px;font-size:11px;color:#97949f;display:flex;align-items:center;gap:5px;flex-shrink:0}
+.s-dots span{display:inline-block;width:4px;height:4px;background:#97949f;border-radius:50%;animation:sdot 1.2s infinite}
+.s-dots span:nth-child(2){animation-delay:.2s}.s-dots span:nth-child(3){animation-delay:.4s}
+@keyframes sdot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-3px);opacity:1}}
+.s-composer{border:1px solid #3a3d42;border-radius:7px;overflow:hidden;margin:0 10px 10px;flex-shrink:0}
+.s-ctoolbar{background:#222529;padding:4px 8px;display:flex;align-items:center;gap:2px;border-bottom:1px solid #2a2d31}
+.s-tbtn{width:24px;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#97949f;font-size:12px;font-weight:700;border:none;background:transparent;cursor:pointer}
+.s-tbtn:hover{background:#2f3136;color:#d1d2d3}
+.s-tsep{width:1px;height:14px;background:#3a3d42;margin:0 3px}
+.s-cinput{background:#222529;padding:9px 11px;color:#6b6f76;font-size:13px}
+.s-cfooter{background:#222529;padding:4px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #2a2d31}
+.s-cfleft{display:flex;gap:4px}
+.s-cfbtn{width:24px;height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#97949f;background:transparent;border:none;cursor:pointer;font-size:14px}
+.s-sbtn{background:#007a5a;border:none;border-radius:4px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:13px}
+.channel-content{display:none;flex-direction:column;flex:1;overflow:hidden}
+.channel-content.active{display:flex}
+.game-container{background:#0f0f0f;border:4px solid var(--yellow);position:relative;overflow:hidden}
+.game-topbar{background:#1a1a1a;border-bottom:2px solid var(--yellow);padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+.game-title{font-family:var(--pixel);font-size:9px;color:var(--yellow)}
+.game-stats{display:flex;gap:20px}
+.game-stat{font-family:var(--pixel);font-size:8px;color:var(--white)}
+.game-stat span{color:var(--yellow)}
+canvas{display:block;width:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+.battle-overlay{display:none;position:absolute;inset:0;background:#0f0f0f;z-index:10;flex-direction:column}
+.battle-overlay.active{display:flex}
+.battle-scene{flex:1;position:relative;background:#1a2a1a;border-bottom:3px solid var(--yellow);display:flex;align-items:flex-end;padding:20px;overflow:hidden;min-height:200px}
+.battle-bg-line{position:absolute;bottom:50px;left:0;right:0;height:2px;background:#2a3a2a}
+.enemy-sprite{position:absolute;top:20px;right:80px;font-size:52px;filter:drop-shadow(2px 2px 0 #000);animation:enemyBob 1s infinite alternate}
+.player-sprite{position:absolute;bottom:20px;left:60px;font-size:36px;filter:drop-shadow(2px 2px 0 #000)}
+@keyframes enemyBob{from{transform:translateY(0)}to{transform:translateY(-6px)}}
+.battle-enemy-info{position:absolute;top:16px;left:16px;background:rgba(0,0,0,.85);border:2px solid var(--yellow);padding:8px 12px}
+.bei-name{font-family:var(--pixel);font-size:8px;color:var(--yellow);margin-bottom:4px}
+.bei-hp{font-family:var(--pixel);font-size:7px;color:var(--white)}
+.hp-bar{width:100px;height:6px;background:#333;margin-top:4px}
+.hp-fill{height:100%;background:var(--green);transition:width .3s}
+.hp-fill.mid{background:var(--yellow)}
+.hp-fill.low{background:var(--red)}
+.battle-dialog-area{background:#0f0f0f;border-top:3px solid var(--yellow);padding:16px;flex-shrink:0}
+.dialog-text{font-family:var(--pixel);font-size:8px;color:var(--white);line-height:2;min-height:48px;margin-bottom:12px;white-space:pre-line}
+.battle-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.battle-btn{font-family:var(--pixel);font-size:7px;padding:10px 8px;background:#1a1a1a;border:2px solid #444;color:var(--white);cursor:pointer;text-align:left;transition:all .1s;line-height:1.8}
+.battle-btn:hover:not(:disabled){border-color:var(--yellow);color:var(--yellow);background:#1a1a00}
+.battle-btn:disabled{opacity:.4;cursor:not-allowed}
+.end-screen{display:none;position:absolute;inset:0;background:#0f0f0f;z-index:20;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
+.end-screen.active{display:flex}
+.end-title{font-family:var(--pixel);font-size:18px;margin-bottom:24px}
+.end-title.win{color:var(--green)}
+.end-title.lose{color:var(--red)}
+.end-msg{font-family:var(--mono);font-size:13px;color:rgba(245,240,232,.7);line-height:1.8;max-width:400px;margin-bottom:32px;white-space:pre-line}
+.end-btn{font-family:var(--pixel);font-size:9px;padding:14px 24px;background:var(--yellow);color:var(--black);border:none;cursor:pointer}
+.game-instructions{background:#1a1a1a;border-top:2px solid #333;padding:10px 16px;display:flex;gap:24px;align-items:center}
+.game-key{font-family:var(--pixel);font-size:7px;color:#666}
+.game-key span{background:#333;border:1px solid #555;padding:2px 6px;color:var(--white);margin-right:4px}
+footer{border-top:1px solid #222;padding:40px;text-align:center;font-family:var(--pixel);font-size:8px;color:#444;letter-spacing:2px}
+footer span{color:var(--yellow)}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <div class="nav-logo">CORP<span style="color:var(--white)">ZOO</span></div>
+  <ul class="nav-links">
+    <li><a href="#corpdex">CorpDex</a></li>
+    <li><a href="#slack-section">HQ</a></li>
+    <li><a href="#game-section">Duck Escape</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <p class="hero-tag">// season 1 — in production</p>
+  <h1>Welcome to<br><span>CorpZoo</span></h1>
+  <p class="hero-sub">The newsletter no VP of Sales will ever send you.<br>Stories, archetypes and irony from the modern office.</p>
+  <div class="hero-btns">
+    <a href="#corpdex" class="btn btn-primary">Open the CorpDex</a>
+    <a href="#game-section" class="btn">Play Duck Escape</a>
+  </div>
+  <p class="hero-scroll">▼ scroll ▼</p>
+</div>
+
+<section id="corpdex">
+  <span class="section-label">// 001 — the field</span>
+  <h2 class="section-title">CORP<span style="color:var(--yellow)">DEX</span></h2>
+  <div class="corpdex-grid" id="dexGrid"></div>
+  <div class="dex-panel" id="dexPanel">
+    <button class="panel-close" onclick="closeDex()">[ close ✕ ]</button>
+    <div class="panel-left">
+      <span class="panel-big-emoji" id="p-emoji"></span>
+      <p class="panel-name" id="p-name"></p>
+      <p class="panel-latin" id="p-latin"></p>
+      <div class="panel-tags" id="p-tags"></div>
+    </div>
+    <div class="panel-right">
+      <div class="pfield"><span class="pfield-label">▸ Habitat</span><p class="pfield-text" id="p-habitat"></p></div>
+      <div class="pfield"><span class="pfield-label">▸ Traits</span><p class="pfield-text" id="p-tratti"></p></div>
+      <div class="pfield"><span class="pfield-label">▸ Diagnosis</span><p class="pfield-text" id="p-diagnosi"></p></div>
+      <div class="pfield"><span class="pfield-label">▸ The masterpiece</span><div class="capo-box" id="p-capo"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="slack-section">
+  <span class="section-label">// 002 — the lair</span>
+  <h2 class="section-title">CORPZOO <span style="color:var(--yellow)">HQ</span></h2>
+  <div class="slack-wrap">
+    <div class="s-sidebar">
+      <div class="s-ws"><div class="s-ws-logo">CZ</div><span class="s-ws-name">CorpZoo</span><div class="s-ws-dot"></div></div>
+      <div class="s-scroll">
+        <div class="s-stitle">Channels <span style="font-size:15px">+</span></div>
+        <div class="s-item" onclick="switchCh('general',this)"><span class="s-hash">#</span> general <span class="s-badge">3</span></div>
+        <div class="s-item active" onclick="switchCh('corpzoo',this)"><span class="s-hash">#</span> CorpZoo</div>
+        <div class="s-item" onclick="switchCh('office',this)"><span class="s-hash">#</span> office</div>
+        <div class="s-item" onclick="switchCh('random',this)"><span class="s-hash">#</span> random</div>
+        <div class="s-item" onclick="switchCh('kudos',this)"><span class="s-hash">#</span> kudos <span class="s-badge">2</span></div>
+        <div class="s-item" onclick="switchCh('general',this)"><span class="s-hash">#</span> announcements</div>
+        <div class="s-item" onclick="switchCh('general',this)"><span class="s-hash">#</span> q2-okrs</div>
+        <div class="s-stitle" style="margin-top:4px">Direct messages <span style="font-size:15px">+</span></div>
+        <div class="s-item"><span>🦤</span> Dodo <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🦜</span> Kiwi <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🐺</span> Wolf <div class="s-dot away"></div></div>
+        <div class="s-item"><span>🐶</span> Dog <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🐄</span> Cow <div class="s-dot away"></div></div>
+        <div class="s-item"><span>🦜</span> Parrot <span class="s-badge">1</span></div>
+        <div class="s-item"><span>🐒</span> Monkey <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🦓</span> Zebra <div class="s-dot away"></div></div>
+        <div class="s-item"><span>🐍</span> Snake <div class="s-dot" style="background:#cd2553"></div></div>
+      </div>
+      <div class="s-me"><div class="s-me-av">🦆<div class="s-me-dot"></div></div><div><div class="s-me-name">Duck</div><div class="s-me-status">Online</div></div></div>
+    </div>
+    <div class="s-main">
+      <div id="ch-corpzoo" class="channel-content active">
+        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">CorpZoo</span><div class="s-ch-div"></div><span class="s-ch-topic">Duck, Kiwi, Dodo</span><div class="s-icons"><span class="s-icon">🔍</span><span class="s-icon">📌</span></div></div>
+        <div class="s-messages">
+          <div class="s-datediv"><hr><span>Today</span><hr></div>
+          <div class="s-mrow"><div class="s-av av-kiwi">🦜</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">09:14</span></div><div class="s-mtext"><div class="s-lcard"><div class="s-lsrc">Financial Times</div><div class="s-ltitle">The exploitation of the modern worker: new forms of alienation</div><div class="s-ldesc">An analysis of working conditions in 2025 and the invisible pressures on employees...</div></div></div></div></div>
+          <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">09:14</div><div class="s-mtext">exactly what we were talking about the other night</div></div></div>
+          <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">09:15</div><div class="s-mtext">they're working us like animals</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-dodo">🦤</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname ndo">Dodo</span><span class="s-mts">09:22</span></div><div class="s-mtext">at this point let's go make rugs in India, pretty sure we'd have more rights there</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">09:31</span></div><div class="s-mtext">finishing tennis lesson then I'll read it, talk later</div></div></div>
+          <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">09:31</div><div class="s-mtext">Dodo if you're home can you move my mouse pls</div></div></div>
+        </div>
+        <div class="s-typing"><div class="s-dots"><span></span><span></span><span></span></div> Kiwi is typing...</div>
+        <div class="s-composer"><div class="s-ctoolbar"><button class="s-tbtn"><b>B</b></button><button class="s-tbtn"><i>I</i></button><button class="s-tbtn" style="text-decoration:line-through">S</button><div class="s-tsep"></div><button class="s-tbtn">🔗</button><button class="s-tbtn">≡</button></div><div class="s-cinput">Message #CorpZoo...</div><div class="s-cfooter"><div class="s-cfleft"><button class="s-cfbtn">📎</button><button class="s-cfbtn">😊</button><button class="s-cfbtn" style="font-size:11px;font-weight:700">@</button><button class="s-cfbtn" style="font-size:10px;font-weight:700">GIF</button></div><button class="s-sbtn">➤</button></div></div>
+      </div>
+      <div id="ch-general" class="channel-content">
+        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">general</span><div class="s-ch-div"></div><span class="s-ch-topic">Everyone • 47 members</span></div>
+        <div class="s-messages">
+          <div class="s-datediv"><hr><span>Today</span><hr></div>
+          <div class="s-mrow"><div class="s-av" style="background:#6b3fa0">🦣</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#e8b84b">Mammoth</span><span class="s-mts">08:03</span></div><div class="s-mtext">Good morning everyone. This reminds me of Q3 2003, back when we did forecasts by hand…</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av" style="background:#1a4a1a">🦊</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#78c06a">Fox</span><span class="s-mts">08:47</span></div><div class="s-mtext">Already closed 3 deals this morning. Just a matter of organization 🙂</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av" style="background:#3a1a5c">🐙</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#b89ddc">CC-Addict</span><span class="s-mts">09:02</span></div><div class="s-mtext">Looping in @Leadership @HR @Legal @IT @CFO — just for visibility 👍</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">09:45</span></div><div class="s-mtext">ok</div></div></div>
+        </div>
+        <div class="s-composer"><div class="s-cinput">Message #general...</div></div>
+      </div>
+      <div id="ch-office" class="channel-content">
+        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">office</span><div class="s-ch-div"></div><span class="s-ch-topic">Logistics and survival</span></div>
+        <div class="s-messages">
+          <div class="s-datediv"><hr><span>Today</span><hr></div>
+          <div class="s-mrow"><div class="s-av av-dodo">🦤</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname ndo">Dodo</span><span class="s-mts">11:30</span></div><div class="s-mtext">Is there an all hands tomorrow? asking because I need to… plan ahead</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av" style="background:#1a5c3a">🦎</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#5fb6f0">Chameleon</span><span class="s-mts">11:31</span></div><div class="s-mtext">Yes! Great opportunity to align on team vision 🚀</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">11:45</span></div><div class="s-mtext">I have a call. all day.</div></div></div>
+        </div>
+        <div class="s-composer"><div class="s-cinput">Message #office...</div></div>
+      </div>
+      <div id="ch-random" class="channel-content">
+        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">random</span><div class="s-ch-div"></div><span class="s-ch-topic">Off topic</span></div>
+        <div class="s-messages">
+          <div class="s-datediv"><hr><span>Today</span><hr></div>
+          <div class="s-mrow"><div class="s-av av-kiwi">🦜</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">14:22</span></div><div class="s-mtext">did you hear about the reorg? I was told that… nah never mind, I said nothing 🤐</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">14:23</span></div><div class="s-mtext">tell me everything</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-kiwi">🦜</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">14:23</span></div><div class="s-mtext">DM 👀</div></div></div>
+        </div>
+        <div class="s-composer"><div class="s-cinput">Message #random...</div></div>
+      </div>
+      <div id="ch-kudos" class="channel-content">
+        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">kudos</span><div class="s-ch-div"></div><span class="s-ch-topic">Celebrating wins 🎉</span></div>
+        <div class="s-messages">
+          <div class="s-datediv"><hr><span>Today</span><hr></div>
+          <div class="s-mrow"><div class="s-av" style="background:#1a4a1a">🦊</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#78c06a">Fox</span><span class="s-mts">10:00</span></div><div class="s-mtext">Kudos to myself for excellent time management this week 🏆</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av" style="background:#3a1a5c">🐙</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#b89ddc">CC-Addict</span><span class="s-mts">10:01</span></div><div class="s-mtext">Thank you so much! 🎉</div></div></div>
+          <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">10:01</div><div class="s-mtext" style="color:#6b6f76;font-style:italic">(reply all to 34 people)</div></div></div>
+        </div>
+        <div class="s-composer"><div class="s-cinput">Message #kudos...</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="game-section">
+  <span class="section-label">// 003 — the game</span>
+  <h2 class="section-title">DUCK <span style="color:var(--yellow)">ESCAPE</span></h2>
+  <p style="font-family:var(--mono);font-size:13px;color:rgba(245,240,232,.5);margin-bottom:24px;line-height:1.7">It's 6pm. Reach the exit 🚪 without getting stopped by your colleagues.<br>Use arrow keys or WASD. Press SPACE to start.</p>
+  <div class="game-container">
+    <div class="game-topbar">
+      <span class="game-title">DUCK ESCAPE v1.0</span>
+      <div class="game-stats">
+        <span class="game-stat">🕕 <span id="g-time">18:00</span></span>
+        <span class="game-stat">❤️ <span id="g-hp">3</span></span>
+        <span class="game-stat">📍 <span id="g-floor">Floor 3</span></span>
+      </div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="384"></canvas>
+    <div class="battle-overlay" id="battleOverlay">
+      <div class="battle-scene">
+        <div class="battle-bg-line"></div>
+        <div class="battle-enemy-info">
+          <div class="bei-name" id="b-name">THE FACILITATOR</div>
+          <div class="bei-hp">HP <span id="b-hpnum">30</span></div>
+          <div class="hp-bar"><div class="hp-fill" id="b-hpbar" style="width:100%"></div></div>
+        </div>
+        <div class="enemy-sprite" id="b-sprite">🪸</div>
+        <div class="player-sprite">🦆</div>
+      </div>
+      <div class="battle-dialog-area">
+        <div class="dialog-text" id="b-dialog">...</div>
+        <div class="battle-actions">
+          <button class="battle-btn" id="ba0" onclick="doAction(0)">IGNORE<br><span style="color:#555;font-size:6px">seems rude but effective</span></button>
+          <button class="battle-btn" id="ba1" onclick="doAction(1)">I HAVE A CALL<br><span style="color:#555;font-size:6px">always works</span></button>
+          <button class="battle-btn" id="ba2" onclick="doAction(2)">I'LL SEND AN EMAIL<br><span style="color:#555;font-size:6px">defers the problem</span></button>
+          <button class="battle-btn" id="ba3" onclick="doAction(3)">RUN<br><span style="color:#555;font-size:6px">50% success rate</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="end-screen" id="endScreen">
+      <div class="end-title" id="end-title">YOU'RE FREE!</div>
+      <p class="end-msg" id="end-msg">...</p>
+      <button class="end-btn" onclick="restartGame()">[ PLAY AGAIN ]</button>
+    </div>
+    <div class="game-instructions">
+      <span class="game-key"><span>↑↓←→</span> move</span>
+      <span class="game-key"><span>WASD</span> move</span>
+      <span class="game-key"><span>SPACE</span> start</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>CORPZOO © 2025 — <span>the newsletter no VP of Sales will ever send you</span></p>
+  <p style="margin-top:8px">duck • dodo • kiwi — season 1</p>
+</footer>
+
+<script>
+const cur = document.getElementById('cursor');
+document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+
+const DEX = [
+  {id:'001',emoji:'🦆',name:'Duck',latin:'Homo Corporatus Disillusionis',tags:['protagonist','remote lover'],
+   habitat:'Desk at the back of the room. Teams always open, mic always muted. Maintains a safe distance from company events.',
+   tratti:'Used to join Halloween contests, tournaments and after-work drinks. Looks back on those days with a mix of nostalgia and cringe. Now mostly mocks those who still believe and envies anyone who works less, earns more, or has a better manager.',
+   diagnosi:'Duck is the protagonist because we\'re all a little bit Duck. It\'s not cynicism — it\'s the natural result of years spent accumulating expectations and watching them quietly get smaller. The dangerous part? He doesn\'t even notice.',
+   capo:'"I\'ll think about it tomorrow" (11:47pm) → "let\'s discuss on a call" (next day). The call was never scheduled.'},
+  {id:'002',emoji:'🦤',name:'Dodo',latin:'Homo Anxiosus Innamoratus',tags:['agoraphobic','serial romantic'],
+   habitat:'Flatshare with Duck. Goes to the office every day — except when there\'s an all hands, because that\'s too many people.',
+   tratti:'Deep existential fear of extinction: layoffs, automation, AI. Falls in love every single week — all it takes is a door held open or a smile in the elevator.',
+   diagnosi:'The historical Dodo went extinct because it had no natural predators and never developed defenses. This Dodo sees too many predators, all imaginary, and sees them everywhere.',
+   capo:'Started a poll in #general: "Will AI replace inside sales within 2 years?" He voted Yes.'},
+  {id:'003',emoji:'🦜',name:'Kiwi',latin:'Homo Gossipus Energeticus',tags:['client success','gossip machine'],
+   habitat:'Client Success — results depend on relationships, not numbers. This makes him simultaneously more human and more dangerous.',
+   tratti:'Knows everything about everyone, always first. Still enthusiastic about company events. Gets mocked by Duck and Dodo who claim he does nothing — he strongly disagrees.',
+   diagnosi:'A parrot repeats. Kiwi doesn\'t repeat — he curates, contextualizes, distributes. In a company where knowledge is power, he\'s the power grid.',
+   capo:'Knew about the reorg three weeks before the announcement. Told nobody — except everyone, one by one, sworn to secrecy.'},
+  {id:'004',emoji:'🦊',name:'Fox',latin:'Vulpes Performativa Chirurgica',tags:['top performer','untouchable'],
+   habitat:'Wherever visibility matters — but only as much as needed. Never #1, always top 3. The gap between first and second place is his natural habitat.',
+   tratti:'Delivers results. Never answers "how do you do it?". Answer is always: "just a matter of organization, I manage my time well."',
+   diagnosi:'Not the class nerd — the evolved version. Figured out that standing out too much creates enemies, and that real careers are built in the shadow of competence.',
+   capo:'500 calls and 2000 emails a week. When someone asked how, he smiled and offered coffee. Nobody figured out if he was human or an AI agent with a badge.'},
+  {id:'005',emoji:'🦣',name:'Mammoth',latin:'Homo Veteranus Immobilis',tags:['lifer','colorful socks'],
+   habitat:'Everywhere — because everywhere is home. Was there before the current logo, before the coffee machine on the second floor, probably before the CEO.',
+   tratti:'Answers everything with a story from \'97. Colorful socks are his only quirk: yellow on Tuesdays, burgundy on Thursdays. Never gives answers — gives context.',
+   diagnosi:'Knows everything about a world that no longer exists. Mistakes experience for universal wisdom. Survives because he remembers everyone\'s mistakes.',
+   capo:'During an innovation workshop with sticky notes and a facilitator in Vans, he took the mic. Twelve minutes later he was telling a story about a German client and dumplings in 2003.'},
+  {id:'006',emoji:'🐈',name:'The New Guy',latin:'Homo Altrove Facebamus',tags:['comparer','under evaluation'],
+   habitat:'Corridors, first-month lunches, every meeting where processes are discussed.',
+   tratti:'"Interesting — at my previous company we had a slightly different approach." Seven minutes of explanation follow. The previous company changes size depending on the audience.',
+   diagnosi:'Not snobbery — fear. Starting somewhere new means rebuilding your status from zero. Your old company is the only currency you can spend immediately.',
+   capo:'"At Google they did something similar in 2019." He had never worked at Google. He\'d done a 3-month internship at an agency that had Google as a client.'},
+  {id:'007',emoji:'☀️',name:'The Visionary',latin:'Homo Disruptivus Perpetuus',tags:['paradigm shift','vision 2030'],
+   habitat:'Strategy meetings, town halls, any context with a projector and two willing listeners. Disappears when someone says "ok, who does what by when".',
+   tratti:'Every week has an idea that "changes everything." Next week, nobody mentions it. Uses "ecosystem" to describe things that could be called "group".',
+   diagnosi:'Understood that this role exists, gets paid, and never requires proving anything concrete — because results are always "long term".',
+   capo:'During a crisis meeting about a 3-week delay, opened a 40-slide presentation on the vision 2030. Slide 2: photo of a forest at sunset. The delay was not discussed.'},
+  {id:'008',emoji:'🐬',name:'The Permanently Busy',latin:'Homo Busyus Apparentivus',tags:['visibility > results','empty deep work'],
+   habitat:'Corridors walked with purpose toward unspecified destinations.',
+   tratti:'Laptop at 45°, screen facing outward. Calendar fully blocked. Replies to management in 4 minutes, to everyone else in 3 days.',
+   diagnosi:'Perfect adaptation to organizations that measure presence instead of results. In a different system wouldn\'t last a week. In this one, thriving for years.',
+   capo:'Volunteered for a project that didn\'t exist yet, outside his area, with an impossible deadline. Was given the green light. He was the only one surprised.'},
+  {id:'009',emoji:'🐙',name:'The CC Addict',latin:'Homo CarbonCopia Compulsivus',tags:['reply all','FYI = your problem'],
+   habitat:'Every thread with more than two recipients — which is his way of saying every thread.',
+   tratti:'"Looping in [name]" — said with the tone of someone solving a problem. Creating three new ones.',
+   diagnosi:'Learned that the more people know about a problem, the less anyone is responsible. Logical evolutionary response to a system where accountability is punishment.',
+   capo:'Reply All to 30 people to write "Thanks so much!" The exclamation mark is an integral part of the masterpiece.'},
+  {id:'010',emoji:'🪸',name:'The Facilitator',latin:'Homo Alignmentus Perpetuus',tags:['alignment','we\'ll circle back'],
+   habitat:'Agendless meeting rooms. Booked for one hour, occupied for ninety minutes because nobody has the courage to say it\'s over.',
+   tratti:'Never takes a position. Uses "alignment" 4 times per meeting. Closes every session with "we\'ll circle back" — which means another meeting, not a decision.',
+   diagnosi:'Those who decide can be wrong. Those who facilitate never are. The system selected, rewarded, and replicated him.',
+   capo:'Organized a meeting to decide when to hold the meeting about how to improve meetings.'},
+  {id:'011',emoji:'📨',name:'The Serial Delegator',latin:'Homo Delegatus Compulsivus',tags:['FYI','great team effort'],
+   habitat:'Center of every org chart — high enough to receive everything, lateral enough to never have to do anything.',
+   tratti:'Forwards within 4 minutes. Record: added only "FYI" — acronym for "this is now your problem".',
+   diagnosi:'Work and the credit for work are two separate things. He specialized in the second.',
+   capo:'Delegated his own annual self-evaluation. HR approved. Feedback received: "excellent ability to leverage the team".'},
+  {id:'012',emoji:'🦎',name:'The Chameleon',latin:'Homo Hierarchicus Selektivus',tags:['two versions','selective proactivity'],
+   habitat:'Two distinct habitats: wherever management is present, and everywhere else.',
+   tratti:'With management: "our team has been working on this." With colleagues: "I need this by tomorrow." Same person, two firmware versions.',
+   diagnosi:'Didn\'t invent the rules. Just read them better than everyone else.',
+   capo:'Presented as his own initiative a project he had blocked for 3 months. The colleague whose work it was sat in the meeting. Nodded.'},
+  {id:'013',emoji:'🐦‍⬛',name:'The Caller',latin:'Homo Calendarius Invasivus',tags:['no agenda','sync of the sync'],
+   habitat:'Lives in other people\'s calendars. His own is surprisingly empty.',
+   tratti:'Never proposes a time. Books. Subject: "Sync". No agenda. Meeting ends without decisions. Follow-up arrives.',
+   diagnosi:'Deeply held belief that one\'s own time and other people\'s time are fundamentally different resources.',
+   capo:'"Strategic Q3 Alignment" — 2 hours, 9 people, no agenda. Opened with "I just wanted us to connect a bit."'},
+];
+
+const dexGrid = document.getElementById('dexGrid');
+const dexPanel = document.getElementById('dexPanel');
+let activeDexIdx = -1;
+
+DEX.forEach((d,i) => {
+  const card = document.createElement('div');
+  card.className='dex-card';
+  card.innerHTML=`<div class="dex-num">#${d.id}</div><span class="dex-emoji">${d.emoji}</span><div class="dex-name">${d.name}</div><div class="dex-latin">${d.latin}</div>`;
+  card.onclick=()=>openDex(i,card);
+  dexGrid.appendChild(card);
+});
+dexGrid.after(dexPanel);
+
+function openDex(i,card){
+  if(activeDexIdx===i){closeDex();return;}
+  activeDexIdx=i;
+  document.querySelectorAll('.dex-card').forEach(c=>c.classList.remove('active'));
+  card.classList.add('active');
+  const d=DEX[i];
+  document.getElementById('p-emoji').textContent=d.emoji;
+  document.getElementById('p-name').textContent=d.name;
+  document.getElementById('p-latin').textContent=d.latin;
+  document.getElementById('p-habitat').textContent=d.habitat;
+  document.getElementById('p-tratti').textContent=d.tratti;
+  document.getElementById('p-diagnosi').textContent=d.diagnosi;
+  document.getElementById('p-capo').textContent=d.capo;
+  document.getElementById('p-tags').innerHTML=d.tags.map(t=>`<span class="ptag">${t}</span>`).join('');
+  dexPanel.classList.add('open');
+  setTimeout(()=>dexPanel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+function closeDex(){
+  activeDexIdx=-1;
+  dexPanel.classList.remove('open');
+  document.querySelectorAll('.dex-card').forEach(c=>c.classList.remove('active'));
+}
+
+function switchCh(ch, el){
+  document.querySelectorAll('.channel-content').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.s-item').forEach(e=>e.classList.remove('active'));
+  const t=document.getElementById('ch-'+ch);
+  if(t) t.classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+const TW=32, COLS=25, ROWS=12;
+
+const MAP=[
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
+  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,4,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,4,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,4,0,0,0,0,0,0,0,0,0,3,0,0,1,0,0,0,0,0,0,4,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
+  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+const ENEMY_DEFS=[
+  {emoji:'🪸',name:'THE FACILITATOR',sx:8,sy:5,maxHp:30,
+   intro:['A wild Facilitator appears!','"Are we all aligned on this?"'],
+   moves:['SHARED AGENDA','CIRCLE BACK','QUICK SYNC?','ARE WE ALIGNED?']},
+  {emoji:'🐙',name:'THE CC ADDICT',sx:16,sy:3,maxHp:25,
+   intro:['A CC Addict intercepts you!','"Looping in the whole team, just for visibility."'],
+   moves:['REPLY ALL','LOOP EVERYONE IN','FWD+FYI','CC THE BOSS']},
+  {emoji:'🦎',name:'THE CHAMELEON',sx:5,sy:8,maxHp:35,
+   intro:['The Chameleon blocks your path!','"Oh hey Duck! I was just thinking about you..."'],
+   moves:['OUR TEAM HAS...','GREAT SYNERGY','QUICK CATCH-UP?','SEEN THE BOSS?']},
+  {emoji:'🐬',name:'THE PERMANENTLY BUSY',sx:19,sy:6,maxHp:20,
+   intro:['The Permanently Busy appears!','"Two minutes, I have something urgent."'],
+   moves:['SUPER INTENSE PERIOD','URGENT CALL','DELIVERABLE','FOLLOW-UP?']},
+  {emoji:'☀️',name:'THE VISIONARY',sx:11,sy:9,maxHp:40,
+   intro:['The Visionary stops you!','"I have an idea that changes EVERYTHING."'],
+   moves:['PARADIGM SHIFT','ECOSYSTEM','VISION 2030','DISRUPTIVE!']},
+];
+
+const ACTIONS=[
+  {label:'IGNORE',sub:'seems rude but effective',
+   exec:(e)=>{const d=rnd(3,10);e.hp=Math.max(0,e.hp-d);return[`You pretend not to hear.`,`${e.name} loses ${d} HP of interest!`];}},
+  {label:'I HAVE A CALL',sub:'always works',
+   exec:(e)=>{const d=rnd(8,18);e.hp=Math.max(0,e.hp-d);return[`"Sorry, I have a call in 30 seconds."`,`CRITICAL HIT! ${e.name} loses ${d} HP!`];}},
+  {label:"I'LL SEND AN EMAIL",sub:'defers the problem',
+   exec:(e)=>{const d=rnd(2,7);e.hp=Math.max(0,e.hp-d);return[`"I'll send you the details over email."`,`${e.name} loses ${d} HP. Still waiting for your reply.`];}},
+  {label:'RUN',sub:'50% success rate',
+   exec:(e)=>{if(Math.random()>.5)return['__ESCAPE__'];return[`You can't escape!`,`${e.name} blocks your path again.`];}},
+];
+
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+
+let gState='start';
+let player={x:1,y:5};
+let enemies=[];
+let curEnemy=null;
+let battlePhase='player';
+let lives=3, ticks=0;
+
+function initGame(){
+  player={x:1,y:5};
+  enemies=ENEMY_DEFS.map(e=>({...e,hp:e.maxHp,alive:true,x:e.sx,y:e.sy,mt:0}));
+  lives=3; ticks=0; gState='playing';
+  document.getElementById('battleOverlay').classList.remove('active');
+  document.getElementById('endScreen').classList.remove('active');
+  updateHUD();
+}
+
+function updateHUD(){
+  const m=Math.floor(ticks/3600);
+  document.getElementById('g-time').textContent=`18:${String(m).padStart(2,'0')}`;
+  document.getElementById('g-hp').textContent='❤️'.repeat(Math.max(0,lives));
+}
+
+function isWall(x,y){
+  if(x<0||y<0||x>=COLS||y>=ROWS)return true;
+  return MAP[y][x]===1||MAP[y][x]===2||MAP[y][x]===4;
+}
+function isExit(x,y){return MAP[y]&&MAP[y][x]===3;}
+
+function move(dx,dy){
+  if(gState!=='playing')return;
+  const nx=player.x+dx,ny=player.y+dy;
+  if(isWall(nx,ny))return;
+  if(isExit(nx,ny)){endGame(true);return;}
+  const hit=enemies.find(e=>e.alive&&e.x===nx&&e.y===ny);
+  if(hit){beginBattle(hit);return;}
+  player.x=nx;player.y=ny;
+}
+
+function endGame(win){
+  gState=win?'win':'lose';
+  document.getElementById('endScreen').classList.add('active');
+  if(win){
+    document.getElementById('end-title').textContent="YOU'RE FREE! 🎉";
+    document.getElementById('end-title').className='end-title win';
+    document.getElementById('end-msg').textContent="You made it out.\nSurvived another Thursday at CorpZoo.\n\nSee you tomorrow.";
+  } else {
+    document.getElementById('end-title').textContent='TRAPPED! 💀';
+    document.getElementById('end-title').className='end-title lose';
+    document.getElementById('end-msg').textContent="You got trapped.\nThey organized another meeting about how to optimize meetings.\n\nYou're still there.";
+  }
+}
+
+function beginBattle(e){
+  gState='battle'; curEnemy=e; battlePhase='player';
+  document.getElementById('battleOverlay').classList.add('active');
+  document.getElementById('b-name').textContent=e.name;
+  document.getElementById('b-sprite').textContent=e.emoji;
+  refreshBattleHP();
+  setDialog(e.intro[0]+'\n'+e.intro[1]);
+  setActions(true);
+}
+
+function refreshBattleHP(){
+  const e=curEnemy;
+  const p=(e.hp/e.maxHp)*100;
+  document.getElementById('b-hpnum').textContent=e.hp;
+  const bar=document.getElementById('b-hpbar');
+  bar.style.width=p+'%';
+  bar.className='hp-fill'+(p<30?' low':p<60?' mid':'');
+}
+
+function setDialog(t){document.getElementById('b-dialog').textContent=t;}
+function setActions(on){['ba0','ba1','ba2','ba3'].forEach(id=>document.getElementById(id).disabled=!on);}
+
+function doAction(idx){
+  if(battlePhase!=='player')return;
+  battlePhase='wait'; setActions(false);
+  const res=ACTIONS[idx].exec(curEnemy);
+  if(res[0]==='__ESCAPE__'){
+    setDialog('You managed to run away!');
+    setTimeout(()=>closeBattle(),1200);
+    return;
+  }
+  setDialog(res.join('\n'));
+  refreshBattleHP();
+  if(curEnemy.hp<=0){
+    setTimeout(()=>{
+      setDialog(curEnemy.name+' gives up.\n"We\'ll circle back!" — and finally walks away.');
+      setTimeout(()=>closeBattle(),1400);
+    },700);
+    return;
+  }
+  setTimeout(()=>{
+    const mv=curEnemy.moves[Math.floor(Math.random()*curEnemy.moves.length)];
+    const dmg=Math.random()<0.4?1:0;
+    if(dmg){
+      lives=Math.max(0,lives-1); updateHUD();
+      if(lives<=0){endGame(false);return;}
+      setDialog(curEnemy.name+' uses '+mv+'!\nYou lose 1 ❤️ — that was 40 wasted minutes.');
+    } else {
+      setDialog(curEnemy.name+' uses '+mv+'!\nYou hold your ground. What a drag.');
+    }
+    setTimeout(()=>{battlePhase='player';setActions(true);},1000);
+  },900);
+}
+
+function closeBattle(){
+  curEnemy.alive=false;
+  document.getElementById('battleOverlay').classList.remove('active');
+  gState='playing';
+}
+
+function restartGame(){initGame();}
+
+let frame=0;
+const FLOOR='#2a5218',WALL='#162c0c',DESK='#5a3a1a',PLANT='#1a4a0a';
+
+function draw(){
+  frame++;
+  ctx.fillStyle='#0a0a0a';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  if(gState==='start'){
+    ctx.fillStyle='#f5c842';
+    ctx.font='12px "Press Start 2P"';
+    ctx.textAlign='center';
+    ctx.fillText('DUCK ESCAPE',canvas.width/2,canvas.height/2-30);
+    ctx.fillStyle='#f5f0e8';
+    ctx.font='8px "Press Start 2P"';
+    ctx.fillText('Press SPACE to start',canvas.width/2,canvas.height/2+10);
+    ctx.fillText('Reach the 🚪 exit door',canvas.width/2,canvas.height/2+35);
+    ctx.fillStyle='rgba(245,200,66,'+(0.4+0.3*Math.sin(frame*.06))+')';
+    ctx.fillText('Avoid your corporate colleagues',canvas.width/2,canvas.height/2+60);
+    return;
+  }
+
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const t=MAP[r][c];
+      ctx.fillStyle=t===0?FLOOR:t===1?WALL:t===2?DESK:t===4?PLANT:'#1a8a50';
+      ctx.fillRect(c*TW,r*TW,TW,TW);
+      if(t===3){
+        ctx.fillStyle=`rgba(45,190,108,${0.3+0.3*Math.sin(frame*.1)})`;
+        ctx.fillRect(c*TW,r*TW,TW,TW);
+        ctx.font='18px serif';ctx.textAlign='center';
+        ctx.fillText('🚪',c*TW+TW/2,r*TW+TW*.78);
+      }
+      if(t===2){ctx.font='14px serif';ctx.textAlign='center';ctx.fillText('🖥️',c*TW+TW/2,r*TW+TW*.75);}
+      if(t===4){ctx.font='16px serif';ctx.textAlign='center';ctx.fillText('🌿',c*TW+TW/2,r*TW+TW*.75);}
+    }
+  }
+
+  ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=.5;
+  for(let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*TW,0);ctx.lineTo(i*TW,ROWS*TW);ctx.stroke();}
+  for(let i=0;i<=ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*TW);ctx.lineTo(COLS*TW,i*TW);ctx.stroke();}
+
+  enemies.forEach(e=>{
+    if(!e.alive)return;
+    if(gState==='playing'){
+      e.mt=(e.mt||0)+1;
+      if(e.mt>90){
+        e.mt=0;
+        const dirs=[[1,0],[-1,0],[0,1],[0,-1]];
+        const [dx,dy]=dirs[Math.floor(Math.random()*4)];
+        const nx=e.x+dx,ny=e.y+dy;
+        if(!isWall(nx,ny)&&!isExit(nx,ny)){e.x=nx;e.y=ny;}
+      }
+    }
+    const bob=Math.sin(frame*.1+e.sx)*2;
+    ctx.font='20px serif';ctx.textAlign='center';
+    ctx.fillText(e.emoji,e.x*TW+TW/2,e.y*TW+TW*.75+bob);
+    ctx.fillStyle='#600';ctx.fillRect(e.x*TW,e.y*TW-5,TW,3);
+    ctx.fillStyle='#2dbe6c';ctx.fillRect(e.x*TW,e.y*TW-5,TW*(e.hp/e.maxHp),3);
+  });
+
+  const pb=Math.sin(frame*.18)*1.5;
+  ctx.font='20px serif';ctx.textAlign='center';
+  ctx.fillText('🦆',player.x*TW+TW/2,player.y*TW+TW*.75+pb);
+  ctx.fillStyle='rgba(245,200,66,.5)';
+  ctx.fillRect(player.x*TW+4,player.y*TW-4,TW-8,3);
+
+  if(gState==='playing'){ticks++;if(ticks%60===0)updateHUD();}
+  if(gState!=='win'&&gState!=='lose') requestAnimationFrame(draw);
+}
+
+document.addEventListener('keydown',e=>{
+  if(gState==='start'&&e.code==='Space'){initGame();requestAnimationFrame(draw);return;}
+  if(gState!=='playing')return;
+  if(e.code==='ArrowUp'||e.code==='KeyW'){e.preventDefault();move(0,-1);}
+  if(e.code==='ArrowDown'||e.code==='KeyS'){e.preventDefault();move(0,1);}
+  if(e.code==='ArrowLeft'||e.code==='KeyA'){e.preventDefault();move(-1,0);}
+  if(e.code==='ArrowRight'||e.code==='KeyD'){e.preventDefault();move(1,0);}
+});
+
+let ts=null;
+canvas.addEventListener('touchstart',e=>{ts={x:e.touches[0].clientX,y:e.touches[0].clientY};e.preventDefault();},{passive:false});
+canvas.addEventListener('touchend',e=>{
+  if(!ts)return;
+  const dx=e.changedTouches[0].clientX-ts.x,dy=e.changedTouches[0].clientY-ts.y;
+  if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1,0);
+  else move(0,dy>0?1:-1);
+  ts=null;
+},{passive:false});
+
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
