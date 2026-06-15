@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CorpZoo</title>
+<title>Cordially</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--black:#0a0a0a;--white:#f5f0e8;--yellow:#f5c842;--green:#2dbe6c;--red:#e84040;--purple:#7c5cbf;--gray:#1e1e1e;--gray2:#2a2a2a;--pixel:'Press Start 2P',monospace;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif}
@@ -34,7 +34,36 @@ section{padding:100px 40px;max-width:1200px;margin:0 auto}
 .section-label{font-family:var(--pixel);font-size:9px;color:var(--yellow);letter-spacing:3px;margin-bottom:16px;display:block}
 .section-title{font-family:var(--pixel);font-size:clamp(18px,3vw,28px);line-height:1.5;margin-bottom:48px}
 
-/* CORPDEX */
+/* ===== ORG CHART ===== */
+.org-tree{display:flex;flex-direction:column;align-items:center;gap:0;font-family:var(--mono);overflow-x:auto;padding-bottom:8px}
+.org-tier-label{font-family:var(--pixel);font-size:7px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;text-align:center}
+.org-card{background:var(--gray);border:2px solid #333;padding:14px 12px 12px;cursor:none;transition:all .15s;position:relative;overflow:hidden;text-align:center;width:100px;flex-shrink:0}
+.org-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--yellow);transform:scaleX(0);transition:transform .2s;transform-origin:left}
+.org-card:hover{border-color:var(--yellow);transform:translateY(-2px)}
+.org-card:hover::before{transform:scaleX(1)}
+.org-card.active{border-color:var(--yellow);background:#1a1a00}
+.org-card.prot{border-color:#2a4a2a}
+.org-card.mystery{border-color:#4a3a00}
+.org-card.staff-type{border-color:#3a2a5c}
+.org-emoji{font-size:24px;margin-bottom:6px;display:block}
+.org-name{font-family:var(--mono);font-size:11px;font-weight:700;margin-bottom:3px;color:var(--white)}
+.org-role{font-family:var(--mono);font-size:9px;color:#666;margin-bottom:6px;line-height:1.4}
+.org-tag{font-family:var(--pixel);font-size:6px;padding:3px 6px;border:1px solid #333;display:inline-block}
+.org-tag.t-npc{color:#e84040;border-color:#4a1a1a}
+.org-tag.t-prot{color:#2dbe6c;border-color:#1a4a2a}
+.org-tag.t-mystery{color:#f5c842;border-color:#4a3a00}
+.org-tag.t-staff{color:#7c5cbf;border-color:#3a2a5c}
+.org-vline{width:1px;background:#333;height:24px;margin:0 auto}
+.org-hbar{height:1px;background:#333}
+.org-clevel-row{display:flex;justify-content:center;gap:8px;flex-wrap:nowrap}
+.org-dept-row{display:flex;justify-content:center;gap:8px;align-items:flex-start;flex-wrap:nowrap}
+.org-dept-col{display:flex;flex-direction:column;align-items:center;gap:0}
+.org-dept-members{display:flex;flex-direction:column;align-items:center;gap:8px}
+.org-dept-members.horizontal{flex-direction:row}
+.org-spread{display:flex;justify-content:space-between}
+.org-spread-tick{width:1px;background:#333}
+
+/* ===== CORPDEX ===== */
 .corpdex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
 .dex-card{background:var(--gray);border:2px solid #333;padding:20px 16px;cursor:none;transition:all .15s;position:relative;overflow:hidden}
 .dex-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--yellow);transform:scaleX(0);transition:transform .2s;transform-origin:left}
@@ -61,7 +90,7 @@ section{padding:100px 40px;max-width:1200px;margin:0 auto}
 .pfield-text{font-family:var(--mono);font-size:12px;color:rgba(245,240,232,.75);line-height:1.7}
 .capo-box{border-left:3px solid var(--purple);padding:12px 16px;font-family:var(--mono);font-size:12px;color:rgba(245,240,232,.75);line-height:1.7;font-style:italic;background:rgba(124,92,191,.08)}
 
-/* SLACK */
+/* ===== SLACK ===== */
 .slack-wrap{background:#1a1d21;border-radius:10px;overflow:hidden;border:1px solid #111;display:flex;height:560px;font-family:'Space Mono',monospace}
 .s-sidebar{width:210px;min-width:210px;background:#19171d;display:flex;flex-direction:column;border-right:1px solid #2a2d31}
 .s-ws{padding:11px 12px 10px;border-bottom:1px solid #2a2d31;display:flex;align-items:center;gap:8px}
@@ -133,7 +162,7 @@ section{padding:100px 40px;max-width:1200px;margin:0 auto}
 .channel-content{display:none;flex-direction:column;flex:1;overflow:hidden}
 .channel-content.active{display:flex}
 
-/* GAME */
+/* ===== GAME ===== */
 .game-container{background:#0f0f0f;border:4px solid var(--yellow);position:relative;overflow:hidden}
 .game-topbar{background:#1a1a1a;border-bottom:2px solid var(--yellow);padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
 .game-title{font-family:var(--pixel);font-size:9px;color:var(--yellow)}
@@ -173,7 +202,6 @@ canvas{display:block;width:100%;image-rendering:pixelated;image-rendering:crisp-
 .game-key span{background:#333;border:1px solid #555;padding:2px 6px;color:var(--white);margin-right:4px}
 footer{border-top:1px solid #222;padding:40px;text-align:center;font-family:var(--pixel);font-size:8px;color:#444;letter-spacing:2px}
 footer span{color:var(--yellow)}
-
 .lang-switch{position:fixed;top:60px;right:40px;z-index:200;display:flex;gap:8px;align-items:center}
 .lang-btn{font-family:'Press Start 2P',monospace;font-size:8px;padding:6px 10px;border:1px solid #444;background:transparent;color:#666;cursor:pointer;text-decoration:none;transition:all .15s;letter-spacing:1px}
 .lang-btn:hover{border-color:var(--yellow);color:var(--yellow)}
@@ -188,8 +216,9 @@ footer span{color:var(--yellow)}
 </div>
 
 <nav>
-  <div class="nav-logo">CORP<span style="color:var(--white)">ZOO</span></div>
+  <div class="nav-logo">CORDIAL<span style="color:var(--white)">LY</span></div>
   <ul class="nav-links">
+    <li><a href="#org-section">Cordial Inc.</a></li>
     <li><a href="#corpdex">CorpDex</a></li>
     <li><a href="#slack-section">HQ</a></li>
     <li><a href="#game-section">Duck Escape</a></li>
@@ -200,18 +229,44 @@ footer span{color:var(--yellow)}
 <div class="hero">
   <div class="hero-grid"></div>
   <p class="hero-tag">// stagione 1 — in produzione</p>
-  <h1>Benvenuto<br>in <span>CorpZoo</span></h1>
+  <h1>Benvenuto<br>in <span>Cordially</span></h1>
   <p class="hero-sub">La newsletter che nessun VP Sales vi manderà mai.<br>Storie, archetipi e ironia dall'ufficio moderno.</p>
   <div class="hero-btns">
-    <a href="#corpdex" class="btn btn-primary">Apri il CorpDex</a>
+    <a href="#org-section" class="btn btn-primary">Cordial Inc.</a>
+    <a href="#corpdex" class="btn">Apri il CorpDex</a>
     <a href="#game-section" class="btn">Gioca a Duck Escape</a>
   </div>
   <p class="hero-scroll">▼ scroll ▼</p>
 </div>
 
+<!-- ORG CHART -->
+<section id="org-section">
+  <span class="section-label">// 001 — la gerarchia</span>
+  <h2 class="section-title">CORDIAL <span style="color:var(--yellow)">INC.</span></h2>
+  <p style="font-family:var(--mono);font-size:13px;color:rgba(245,240,232,.5);margin-bottom:40px;line-height:1.7">Clicca su un personaggio per espandere la scheda.</p>
+
+  <div class="org-tree" id="orgTree"></div>
+
+  <div class="dex-panel" id="orgPanel" style="margin-top:24px;">
+    <button class="panel-close" onclick="closeOrg()">[ chiudi ✕ ]</button>
+    <div class="panel-left">
+      <span class="panel-big-emoji" id="op-emoji"></span>
+      <p class="panel-name" id="op-name"></p>
+      <p class="panel-latin" id="op-latin"></p>
+      <div class="panel-tags" id="op-tags"></div>
+    </div>
+    <div class="panel-right">
+      <div class="pfield"><span class="pfield-label">▸ Ruolo</span><p class="pfield-text" id="op-ruolo"></p></div>
+      <div class="pfield"><span class="pfield-label">▸ Tratti</span><p class="pfield-text" id="op-tratti"></p></div>
+      <div class="pfield"><span class="pfield-label">▸ Diagnosi</span><p class="pfield-text" id="op-diagnosi"></p></div>
+      <div class="pfield"><span class="pfield-label">▸ Il capolavoro</span><div class="capo-box" id="op-capo"></div></div>
+    </div>
+  </div>
+</section>
+
 <!-- CORPDEX -->
 <section id="corpdex">
-  <span class="section-label">// 001 — il campo</span>
+  <span class="section-label">// 002 — il campo</span>
   <h2 class="section-title">CORP<span style="color:var(--yellow)">DEX</span></h2>
   <div class="corpdex-grid" id="dexGrid"></div>
   <div class="dex-panel" id="dexPanel">
@@ -233,15 +288,15 @@ footer span{color:var(--yellow)}
 
 <!-- SLACK HQ -->
 <section id="slack-section">
-  <span class="section-label">// 002 — la tana</span>
-  <h2 class="section-title">CORPZOO <span style="color:var(--yellow)">HQ</span></h2>
+  <span class="section-label">// 003 — la tana</span>
+  <h2 class="section-title">CORDIALLY <span style="color:var(--yellow)">HQ</span></h2>
   <div class="slack-wrap">
     <div class="s-sidebar">
-      <div class="s-ws"><div class="s-ws-logo">CZ</div><span class="s-ws-name">CorpZoo</span><div class="s-ws-dot"></div></div>
+      <div class="s-ws"><div class="s-ws-logo">CI</div><span class="s-ws-name">Cordial Inc.</span><div class="s-ws-dot"></div></div>
       <div class="s-scroll">
         <div class="s-stitle">Channels <span style="font-size:15px">+</span></div>
         <div class="s-item" onclick="switchCh('general',this)"><span class="s-hash">#</span> general <span class="s-badge">3</span></div>
-        <div class="s-item active" onclick="switchCh('corpzoo',this)"><span class="s-hash">#</span> CorpZoo</div>
+        <div class="s-item active" onclick="switchCh('corpzoo',this)"><span class="s-hash">#</span> cordially</div>
         <div class="s-item" onclick="switchCh('office',this)"><span class="s-hash">#</span> office</div>
         <div class="s-item" onclick="switchCh('random',this)"><span class="s-hash">#</span> random</div>
         <div class="s-item" onclick="switchCh('kudos',this)"><span class="s-hash">#</span> kudos <span class="s-badge">2</span></div>
@@ -249,24 +304,24 @@ footer span{color:var(--yellow)}
         <div class="s-item" onclick="switchCh('general',this)"><span class="s-hash">#</span> q2-okrs</div>
         <div class="s-stitle" style="margin-top:4px">Direct messages <span style="font-size:15px">+</span></div>
         <div class="s-item"><span>🦤</span> Dodo <div class="s-dot on"></div></div>
-        <div class="s-item"><span>🦜</span> Kiwi <div class="s-dot on"></div></div>
-        <div class="s-item"><span>🐺</span> Wolf <div class="s-dot away"></div></div>
-        <div class="s-item"><span>🐶</span> Dog <div class="s-dot on"></div></div>
-        <div class="s-item"><span>🐄</span> Cow <div class="s-dot away"></div></div>
-        <div class="s-item"><span>🦜</span> Parrot <span class="s-badge">1</span></div>
-        <div class="s-item"><span>🐒</span> Monkey <div class="s-dot on"></div></div>
-        <div class="s-item"><span>🦓</span> Zebra <div class="s-dot away"></div></div>
-        <div class="s-item"><span>🐍</span> Snake <div class="s-dot" style="background:#cd2553"></div></div>
+        <div class="s-item"><span>🐦</span> Kiwi <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🦩</span> Flamingo <div class="s-dot away"></div></div>
+        <div class="s-item"><span>🦊</span> Fox <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🐒</span> Lemur <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🤖</span> Claudio <div class="s-dot" style="background:#2bac76"></div></div>
+        <div class="s-item"><span>🦡</span> Badger <div class="s-dot away"></div></div>
+        <div class="s-item"><span>🐹</span> Hamster <div class="s-dot on"></div></div>
+        <div class="s-item"><span>🦁</span> Lion <div class="s-dot" style="background:#cd2553"></div></div>
       </div>
       <div class="s-me"><div class="s-me-av">🦆<div class="s-me-dot"></div></div><div><div class="s-me-name">Duck</div><div class="s-me-status">Online</div></div></div>
     </div>
     <div class="s-main">
-      <!-- #corpzoo -->
+      <!-- #cordially -->
       <div id="ch-corpzoo" class="channel-content active">
-        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">CorpZoo</span><div class="s-ch-div"></div><span class="s-ch-topic">Duck, Kiwi, Dodo</span><div class="s-icons"><span class="s-icon">🔍</span><span class="s-icon">📌</span></div></div>
+        <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">cordially</span><div class="s-ch-div"></div><span class="s-ch-topic">Duck, Kiwi, Dodo</span><div class="s-icons"><span class="s-icon">🔍</span><span class="s-icon">📌</span></div></div>
         <div class="s-messages">
           <div class="s-datediv"><hr><span>Oggi</span><hr></div>
-          <div class="s-mrow"><div class="s-av av-kiwi">🦜</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">09:14</span></div><div class="s-mtext"><div class="s-lcard"><div class="s-lsrc">Il Sole 24 Ore</div><div class="s-ltitle">Lo sfruttamento del lavoratore moderno: le nuove forme di alienazione</div><div class="s-ldesc">Un'analisi delle condizioni di lavoro nel 2025...</div></div></div></div></div>
+          <div class="s-mrow"><div class="s-av av-kiwi">🐦</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">09:14</span></div><div class="s-mtext"><div class="s-lcard"><div class="s-lsrc">Il Sole 24 Ore</div><div class="s-ltitle">Lo sfruttamento del lavoratore moderno: le nuove forme di alienazione</div><div class="s-ldesc">Un'analisi delle condizioni di lavoro nel 2025...</div></div></div></div></div>
           <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">09:14</div><div class="s-mtext">quello di cui parlavamo l'altra sera</div></div></div>
           <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">09:15</div><div class="s-mtext">questi ci sfruttano come animali</div></div></div>
           <div class="s-mrow s-gap"><div class="s-av av-dodo">🦤</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname ndo">Dodo</span><span class="s-mts">09:22</span></div><div class="s-mtext">a sto punto andiamo in India a fare i tappeti raga, mi sa che abbiamo più diritti là</div></div></div>
@@ -274,14 +329,14 @@ footer span{color:var(--yellow)}
           <div class="s-mrow"><div class="s-avph"></div><div class="s-mbody"><div class="s-cts">09:31</div><div class="s-mtext">Dodo se sei a casa mi muovi il mouse per favore</div></div></div>
         </div>
         <div class="s-typing"><div class="s-dots"><span></span><span></span><span></span></div> Kiwi sta scrivendo...</div>
-        <div class="s-composer"><div class="s-ctoolbar"><button class="s-tbtn"><b>B</b></button><button class="s-tbtn"><i>I</i></button><button class="s-tbtn" style="text-decoration:line-through">S</button><div class="s-tsep"></div><button class="s-tbtn">🔗</button><button class="s-tbtn">≡</button></div><div class="s-cinput">Scrivi a #CorpZoo...</div><div class="s-cfooter"><div class="s-cfleft"><button class="s-cfbtn">📎</button><button class="s-cfbtn">😊</button><button class="s-cfbtn" style="font-size:11px;font-weight:700">@</button><button class="s-cfbtn" style="font-size:10px;font-weight:700">GIF</button></div><button class="s-sbtn">➤</button></div></div>
+        <div class="s-composer"><div class="s-ctoolbar"><button class="s-tbtn"><b>B</b></button><button class="s-tbtn"><i>I</i></button><button class="s-tbtn" style="text-decoration:line-through">S</button><div class="s-tsep"></div><button class="s-tbtn">🔗</button><button class="s-tbtn">≡</button></div><div class="s-cinput">Scrivi a #cordially...</div><div class="s-cfooter"><div class="s-cfleft"><button class="s-cfbtn">📎</button><button class="s-cfbtn">😊</button><button class="s-cfbtn" style="font-size:11px;font-weight:700">@</button><button class="s-cfbtn" style="font-size:10px;font-weight:700">GIF</button></div><button class="s-sbtn">➤</button></div></div>
       </div>
       <!-- #general -->
       <div id="ch-general" class="channel-content">
         <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">general</span><div class="s-ch-div"></div><span class="s-ch-topic">Tutti • 47 membri</span></div>
         <div class="s-messages">
           <div class="s-datediv"><hr><span>Oggi</span><hr></div>
-          <div class="s-mrow"><div class="s-av" style="background:#6b3fa0">🦣</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#e8b84b">Mammut</span><span class="s-mts">08:03</span></div><div class="s-mtext">Buongiorno a tutti. Mi ricorda qualcosa il Q3 del 2003, quando i forecast li facevamo a mano…</div></div></div>
+          <div class="s-mrow"><div class="s-av" style="background:#6b3fa0">🦣</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#e8b84b">Mammoth</span><span class="s-mts">08:03</span></div><div class="s-mtext">Buongiorno a tutti. Mi ricorda qualcosa il Q3 del 2003, quando i forecast li facevamo a mano…</div></div></div>
           <div class="s-mrow s-gap"><div class="s-av" style="background:#1a4a1a">🦊</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#78c06a">Fox</span><span class="s-mts">08:47</span></div><div class="s-mtext">Ho già chiuso 3 deal stamattina. Questione di organizzazione 🙂</div></div></div>
           <div class="s-mrow s-gap"><div class="s-av" style="background:#3a1a5c">🐙</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#b89ddc">CC-Dipendente</span><span class="s-mts">09:02</span></div><div class="s-mtext">Metto in loop anche @Direzione @HR @Legal @IT @CFO — per completezza 👍</div></div></div>
           <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">09:45</span></div><div class="s-mtext">ok</div></div></div>
@@ -294,7 +349,7 @@ footer span{color:var(--yellow)}
         <div class="s-messages">
           <div class="s-datediv"><hr><span>Oggi</span><hr></div>
           <div class="s-mrow"><div class="s-av av-dodo">🦤</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname ndo">Dodo</span><span class="s-mts">11:30</span></div><div class="s-mtext">Domani ci sarà l'all hands? chiedo perché devo… organizzarmi</div></div></div>
-          <div class="s-mrow s-gap"><div class="s-av" style="background:#1a5c3a">🦎</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#5fb6f0">Camaleonte</span><span class="s-mts">11:31</span></div><div class="s-mtext">Sì! Ottima opportunità per allinearci sulla vision di team 🚀</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av" style="background:#1a5c3a">🦎</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname" style="color:#5fb6f0">Hamster</span><span class="s-mts">11:31</span></div><div class="s-mtext">Sì! Ottima opportunità per allinearci sulla vision di team 🚀</div></div></div>
           <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">11:45</span></div><div class="s-mtext">ho una call. tutto il giorno.</div></div></div>
         </div>
         <div class="s-composer"><div class="s-cinput">Scrivi a #office...</div></div>
@@ -304,9 +359,9 @@ footer span{color:var(--yellow)}
         <div class="s-header"><span class="s-ch-hash">#</span><span class="s-ch-name">random</span><div class="s-ch-div"></div><span class="s-ch-topic">Off topic</span></div>
         <div class="s-messages">
           <div class="s-datediv"><hr><span>Oggi</span><hr></div>
-          <div class="s-mrow"><div class="s-av av-kiwi">🦜</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">14:22</span></div><div class="s-mtext">avete sentito del reorg? mi dicono che… no niente, giuro di niente 🤐</div></div></div>
+          <div class="s-mrow"><div class="s-av av-kiwi">🐦</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">14:22</span></div><div class="s-mtext">avete sentito del reorg? mi dicono che… no niente, giuro di niente 🤐</div></div></div>
           <div class="s-mrow s-gap"><div class="s-av av-duck">🦆</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nd">Duck</span><span class="s-mts">14:23</span></div><div class="s-mtext">dimmi tutto</div></div></div>
-          <div class="s-mrow s-gap"><div class="s-av av-kiwi">🦜</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">14:23</span></div><div class="s-mtext">in DM 👀</div></div></div>
+          <div class="s-mrow s-gap"><div class="s-av av-kiwi">🐦</div><div class="s-mbody"><div class="s-mmeta"><span class="s-mname nk">Kiwi</span><span class="s-mts">14:23</span></div><div class="s-mtext">in DM 👀</div></div></div>
         </div>
         <div class="s-composer"><div class="s-cinput">Scrivi a #random...</div></div>
       </div>
@@ -327,7 +382,7 @@ footer span{color:var(--yellow)}
 
 <!-- GAME -->
 <section id="game-section">
-  <span class="section-label">// 003 — il gioco</span>
+  <span class="section-label">// 004 — il gioco</span>
   <h2 class="section-title">DUCK <span style="color:var(--yellow)">ESCAPE</span></h2>
   <p style="font-family:var(--mono);font-size:13px;color:rgba(245,240,232,.5);margin-bottom:24px;line-height:1.7">Sono le 18:00. Devi raggiungere l'uscita 🚪 senza farti fermare dai colleghi.<br>Usa frecce o WASD. Premi SPAZIO per iniziare.</p>
   <div class="game-container">
@@ -340,15 +395,10 @@ footer span{color:var(--yellow)}
       </div>
     </div>
     <canvas id="gameCanvas" width="800" height="384"></canvas>
-    <!-- BATTLE -->
     <div class="battle-overlay" id="battleOverlay">
       <div class="battle-scene">
         <div class="battle-bg-line"></div>
-        <div class="battle-enemy-info">
-          <div class="bei-name" id="b-name">IL FACILITATORE</div>
-          <div class="bei-hp">HP <span id="b-hpnum">30</span></div>
-          <div class="hp-bar"><div class="hp-fill" id="b-hpbar" style="width:100%"></div></div>
-        </div>
+        <div class="battle-enemy-info"><div class="bei-name" id="b-name">IL FACILITATORE</div><div class="bei-hp">HP <span id="b-hpnum">30</span></div><div class="hp-bar"><div class="hp-fill" id="b-hpbar" style="width:100%"></div></div></div>
         <div class="enemy-sprite" id="b-sprite">🪸</div>
         <div class="player-sprite">🦆</div>
       </div>
@@ -362,7 +412,6 @@ footer span{color:var(--yellow)}
         </div>
       </div>
     </div>
-    <!-- END -->
     <div class="end-screen" id="endScreen">
       <div class="end-title" id="end-title">SEI LIBERO!</div>
       <p class="end-msg" id="end-msg">...</p>
@@ -377,8 +426,8 @@ footer span{color:var(--yellow)}
 </section>
 
 <footer>
-  <p>CORPZOO © 2025 — <span>la newsletter che nessun VP Sales vi manderà mai</span></p>
-  <p style="margin-top:8px">duck • dodo • kiwi — stagione 1</p>
+  <p>CORDIALLY © 2025 — <span>la newsletter che nessun VP Sales vi manderà mai</span></p>
+  <p style="margin-top:8px">duck • dodo • kiwi • flamingo • fox — stagione 1</p>
 </footer>
 
 <script>
@@ -386,88 +435,259 @@ footer span{color:var(--yellow)}
 const cur = document.getElementById('cursor');
 document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
 
+// ====== ORG CHART ======
+(function(){
+const ORG = {
+  founders:[
+    {emoji:'🦣',name:'Mammoth',role:'President',latin:'Fossilum Permanentis',type:'npc',
+     ruolo:'Presidente. C\'era prima che l\'azienda avesse un nome.',
+     tratti:'Risponde con storie dal \'97. Non dà risposte — dà contesti storici.',
+     diagnosi:'Sa tutto di un mondo che non esiste più. Sopravvive perché ricorda gli errori di tutti.',
+     capo:'"Ho visto 14 CEO venire e andare."'}
+  ],
+  ceo:[
+    {emoji:'🦁',name:'Lion',role:'CEO',latin:'Rex Corporatus Instagrammensis',type:'npc',
+     ruolo:'CEO. Giovane, bello, carismatico. Nessuno ha capito cosa faccia concretamente.',
+     tratti:'Ottimo su LinkedIn. Ogni town hall finisce con un video motivazionale.',
+     diagnosi:'La presenza è il prodotto. La narrazione è la strategia.',
+     capo:'"Dobbiamo pensare out of the box. Anzi, fuori dalla savana."'}
+  ],
+  staff:[
+    {emoji:'🦉',name:'Owl',role:'Chief of Stuff',latin:'Consultans Omni-Sciurus',type:'staff',
+     ruolo:'Chief of Stuff (sic). Sa tutto di tutto, è ovunque e da nessuna parte.',
+     tratti:'Spiega le cose come se tu fossi un bug da fixare.',
+     diagnosi:'Il ruolo esiste perché è più comodo avere qualcuno che sa tutto che impararlo.',
+     capo:'"Tecnicamente, non funziona così."'}
+  ],
+  clevels:[
+    {emoji:'🦈',name:'Shark',role:'VP Sales',dept:'Sales',latin:'Venditor Aggressivus',type:'npc',
+     ruolo:'VP Sales. Pipeline sempre pieno, anima sempre in muto.',
+     tratti:'Se non chiudi entro venerdì, non esisti.',
+     diagnosi:'Il fine giustifica i mezzi. I mezzi sono tutti.',
+     capo:'"Chiudiamo entro venerdì o non esisti."'},
+    {emoji:'🐦‍⬛',name:'Raven',role:'CPO / HR',dept:'People & Ops',latin:'Nuncius Malarum Novorum',type:'npc',
+     ruolo:'CPO / HR. Porta sempre cattive notizie con il sorriso.',
+     tratti:'Ogni annuncio alle 14 è una sentenza.',
+     diagnosi:'Il messaggero sopravvive perché nessuno vuole fare il suo lavoro.',
+     capo:'"Abbiamo un annuncio importante alle 14."'},
+    {emoji:'🐊',name:'Croc',role:'CFO',dept:'Finance',latin:'Avarus Brachium-Curtus',type:'npc',
+     ruolo:'CFO. Braccio corto. Ogni budget tagliato del 30% per principio.',
+     tratti:'Non è nel budget. Mai. Punto.',
+     diagnosi:'Il risparmio è un\'ideologia, non una necessità.',
+     capo:'"Non è nel budget. Punto."'},
+    {emoji:'🦚',name:'Peacock',role:'CMO',dept:'Marketing',latin:'Brandus Narcissisticus',type:'npc',
+     ruolo:'CMO. Ogni deck ha 47 slide. Il font è sempre sbagliato.',
+     tratti:'L\'awareness è sempre la risposta.',
+     diagnosi:'L\'estetica nasconde l\'assenza di strategia.',
+     capo:'"Dobbiamo lavorare sull\'awareness."'},
+    {emoji:'🐙',name:'Octopus',role:'CTO',dept:'IT',latin:'Technologus Multitaskus',type:'npc',
+     ruolo:'CTO. Otto cose in parallelo. Quante siano finite: sconosciuto.',
+     tratti:'Gestisce tutto simultaneamente, risponde a nessuno in modo completo.',
+     diagnosi:'Il multitasking estremo è l\'unico modo per non dover rispondere davvero a niente.',
+     capo:'"Sto gestendo. Tutte e otto."'},
+  ],
+  depts:[
+    {name:'Sales',horizontal:true,members:[
+      {emoji:'🦆',name:'Duck',role:'Account Exec',latin:'Homo Corporatus Disillusioni',type:'prot',
+       ruolo:'Account Executive. Protagonista. Siamo tutti un po\' Duck.',
+       tratti:'Ha partecipato a tutto. Ora la sua attività principale è prendere per il culo chi ci crede ancora.',
+       diagnosi:'Non è cinismo — è il risultato naturale di anni passati ad accumulare aspettative e vederle ridimensionate.',
+       capo:'"ci penso domani" (23:47) → "ne parliamo in call" (mai fissata).'},
+      {emoji:'🦤',name:'Dodo',role:'Sales Ops',latin:'Homo Anxiosus Innamoratus',type:'prot',
+       ruolo:'Sales Ops. Agorafobico, romantico seriale, terrorizzato dall\'AI.',
+       tratti:'Innamoramento fulminante ogni settimana: basta una porta tenuta aperta o un sorriso in ascensore.',
+       diagnosi:'Il Dodo storico si è estinto perché non aveva predatori naturali. Questo ne vede troppi, tutti immaginari.',
+       capo:'Ha aperto un sondaggio su #general: "l\'AI sostituirà gli inside sales entro 2 anni?" Ha votato Sì.'},
+      {emoji:'🐒',name:'Lemur',role:'SDR',latin:'Dispersius Hyperactivus',type:'npc',
+       ruolo:'SDR. Iperattivo, dispersivo. Mille task aperti, zero chiusi.',
+       tratti:'Risponde alle email con emoji. Ha sempre 47 tab aperti.',
+       diagnosi:'L\'energia è reale. La direzione è un concetto astratto.',
+       capo:'"sto lavorando su una cosa importante 🙃"'},
+    ]},
+    {name:'People & Ops',horizontal:false,members:[
+      {emoji:'🐹',name:'Hamster',role:'HR Specialist',latin:'Activisimus HR-ensis',type:'npc',
+       ruolo:'HR Specialist. Organizza corsi di mindfulness che nessuno segue.',
+       tratti:'Manda survey sul benessere ogni settimana. Sostiene siano anonimi.',
+       diagnosi:'La cura del dipendente è una metrica, non una pratica.',
+       capo:'"Avete compilato il survey? È anonimo, lo giuro."'},
+    ]},
+    {name:'Finance',horizontal:false,members:[
+      {emoji:'🦡',name:'Badger',role:'Finance Analyst',latin:'Accountans Paranoicus',type:'npc',
+       ruolo:'Finance Analyst. Riconcilia ogni centesimo.',
+       tratti:'Conosce le note spese di tutti a memoria.',
+       diagnosi:'Il controllo è l\'unica forma di potere rimasta.',
+       capo:'"Chi ha speso €3,40 su Bolt il 14 marzo?"'},
+    ]},
+    {name:'Marketing',horizontal:false,members:[
+      {emoji:'🦩',name:'Flamingo',role:'Content Manager',latin:'Contentus Aestheticus Vacuus',type:'prot',
+       ruolo:'Content Manager. Esteticamente impeccabile, professionalmente vuota.',
+       tratti:'Tutto è content — anche la riunione di bilancio. Canva meglio di Figma.',
+       diagnosi:'In un mondo che misura il like, chi fa bello vince su chi fa giusto.',
+       capo:'"We need more storytelling 🌸 Anche — qualcuno può sistemare il font?"'},
+    ]},
+    {name:'IT',horizontal:false,members:[
+      {emoji:'🤖',name:'Claudio',role:'IT Support',latin:'Humanus vel Machina?',type:'mystery',
+       ruolo:'IT Support. Nessuno sa con certezza se Claudio sia una persona o un\'AI.',
+       tratti:'Risponde sempre in modo impeccabile, forse troppo. Non ha mai preso un giorno di malattia.',
+       diagnosi:'L\'ambiguità è una feature, non un bug.',
+       capo:'"Ciao! Ho già risolto il tuo problema prima che tu lo segnalassi."'},
+    ]},
+    {name:'Client Success',horizontal:true,members:[
+      {emoji:'🐦',name:'Kiwi',role:'CSM',latin:'Homo Gossipus Energeticus',type:'prot',
+       ruolo:'CSM. Sa tutto di tutti. Ancora entusiasta degli eventi aziendali.',
+       tratti:'È la rete elettrica dell\'ufficio. Preso per il culo da Duck e Dodo.',
+       diagnosi:'In un\'azienda dove la conoscenza è potere, lui è la centrale elettrica.',
+       capo:'Sapeva del reorg tre settimane prima. Non ha detto niente a nessuno — tranne a tutti, uno alla volta, sotto giuramento.'},
+      {emoji:'🦊',name:'Fox',role:'Senior CSM',latin:'Vulpes Performativa Chirurgica',type:'prot',
+       ruolo:'Senior CSM. Top performer. Mai primo, sempre top 3.',
+       tratti:'Non risponde mai a "come fai?". Porta risultati silenziosi.',
+       diagnosi:'Ha capito che la vera carriera si costruisce nella penombra della competenza.',
+       capo:'500 chiamate e 2000 email a settimana. Quando qualcuno ha chiesto come facesse, ha sorriso e offerto un caffè.'},
+    ]},
+  ]
+};
+
+const tree=document.getElementById('orgTree');
+const panel=document.getElementById('orgPanel');
+let activeOrgCard=null;
+
+function tagClass(t){return t==='prot'?'t-prot':t==='mystery'?'t-mystery':t==='staff'?'t-staff':'t-npc';}
+function tagLabel(t){return t==='prot'?'★ Prot.':t==='mystery'?'???':t==='staff'?'Staff':'NPC';}
+
+function makeCard(p){
+  const d=document.createElement('div');
+  d.className='org-card '+(p.type==='staff'?'staff-type':p.type);
+  d.innerHTML=`<span class="org-emoji">${p.emoji}</span><div class="org-name">${p.name}</div><div class="org-role">${p.role}</div><span class="org-tag ${tagClass(p.type)}">${tagLabel(p.type)}</span>`;
+  d.onclick=()=>openOrg(p,d);
+  return d;
+}
+function vl(h){const d=document.createElement('div');d.className='org-vline';if(h)d.style.height=h;return d;}
+function hb(w){const d=document.createElement('div');d.className='org-hbar';if(w)d.style.width=w;return d;}
+function tick(h){const d=document.createElement('div');d.className='org-spread-tick';if(h)d.style.height=h;return d;}
+
+// Founders
+const fr=document.createElement('div');fr.style.cssText='display:flex;justify-content:center;';
+ORG.founders.forEach(p=>fr.appendChild(makeCard(p)));
+tree.appendChild(fr);tree.appendChild(vl('24px'));
+
+// CEO
+const cr=document.createElement('div');cr.style.cssText='display:flex;justify-content:center;';
+ORG.ceo.forEach(p=>cr.appendChild(makeCard(p)));
+tree.appendChild(cr);tree.appendChild(vl('24px'));
+
+// CEO → C-levels spread
+const clN=ORG.clevels.length;
+const spreadWrap=document.createElement('div');
+spreadWrap.style.cssText='width:100%;max-width:660px;margin:0 auto;';
+const topHbar=hb('100%');
+const topTicks=document.createElement('div');
+topTicks.className='org-spread';topTicks.style.width='100%';
+for(let i=0;i<clN;i++)topTicks.appendChild(tick('20px'));
+spreadWrap.appendChild(topHbar);spreadWrap.appendChild(topTicks);
+
+// Chief of Staff lateral + main column wrapper
+const rowWrap=document.createElement('div');
+rowWrap.style.cssText='display:flex;align-items:flex-start;justify-content:center;width:100%;';
+
+const staffSide=document.createElement('div');
+staffSide.style.cssText='display:flex;flex-direction:column;align-items:center;margin-right:12px;';
+staffSide.appendChild(makeCard(ORG.staff[0]));
+
+const mainCol=document.createElement('div');
+mainCol.style.cssText='display:flex;flex-direction:column;align-items:center;flex:1;max-width:660px;';
+mainCol.appendChild(spreadWrap);
+const clevRow=document.createElement('div');clevRow.className='org-clevel-row';
+ORG.clevels.forEach(p=>clevRow.appendChild(makeCard(p)));
+mainCol.appendChild(clevRow);
+
+rowWrap.appendChild(staffSide);rowWrap.appendChild(mainCol);
+tree.appendChild(rowWrap);
+
+// C-levels → depts
+const dN=ORG.depts.length;
+const dTicksWrap=document.createElement('div');
+dTicksWrap.style.cssText='width:100%;max-width:660px;margin:0 auto;';
+const dTopHbar=hb('100%');
+const dTopTicks=document.createElement('div');
+dTopTicks.className='org-spread';dTopTicks.style.width='100%';
+for(let i=0;i<dN;i++)dTopTicks.appendChild(tick('20px'));
+dTicksWrap.appendChild(dTopHbar);dTicksWrap.appendChild(dTopTicks);
+tree.appendChild(dTicksWrap);
+
+// Dept columns
+const deptRow=document.createElement('div');deptRow.className='org-dept-row';
+ORG.depts.forEach(dept=>{
+  const col=document.createElement('div');col.className='org-dept-col';
+  const lbl=document.createElement('div');lbl.className='org-tier-label';
+  lbl.style.cssText='margin-top:12px;margin-bottom:6px;min-width:90px;';lbl.textContent=dept.name;
+  col.appendChild(vl('20px'));col.appendChild(lbl);
+
+  if(dept.horizontal&&dept.members.length>1){
+    const totalW=dept.members.length*100+(dept.members.length-1)*8;
+    const mhb=hb(totalW+'px');
+    const mticks=document.createElement('div');
+    mticks.style.cssText=`display:flex;justify-content:space-between;width:${totalW}px;`;
+    dept.members.forEach(()=>mticks.appendChild(tick('16px')));
+    col.appendChild(mhb);col.appendChild(mticks);
+    const mrow=document.createElement('div');mrow.style.cssText='display:flex;gap:8px;';
+    dept.members.forEach(m=>mrow.appendChild(makeCard(m)));
+    col.appendChild(mrow);
+  } else {
+    const mwrap=document.createElement('div');mwrap.style.cssText='display:flex;flex-direction:column;gap:8px;align-items:center;';
+    dept.members.forEach(m=>mwrap.appendChild(makeCard(m)));
+    col.appendChild(mwrap);
+  }
+  deptRow.appendChild(col);
+});
+tree.appendChild(deptRow);
+
+function openOrg(p,cardEl){
+  if(activeOrgCard===cardEl){closeOrg();return;}
+  if(activeOrgCard)activeOrgCard.classList.remove('active');
+  activeOrgCard=cardEl;cardEl.classList.add('active');
+  document.getElementById('op-emoji').textContent=p.emoji;
+  document.getElementById('op-name').textContent=p.name;
+  document.getElementById('op-latin').textContent=p.latin;
+  document.getElementById('op-ruolo').textContent=p.ruolo;
+  document.getElementById('op-tratti').textContent=p.tratti;
+  document.getElementById('op-diagnosi').textContent=p.diagnosi;
+  document.getElementById('op-capo').textContent=p.capo;
+  document.getElementById('op-tags').innerHTML=`<span class="ptag">${p.role}</span><span class="ptag">${tagLabel(p.type)}</span>`;
+  panel.classList.add('open');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+window.closeOrg=function(){panel.classList.remove('open');if(activeOrgCard)activeOrgCard.classList.remove('active');activeOrgCard=null;};
+})();
+
 // ====== CORPDEX ======
-const DEX = [
-  {id:'001',emoji:'🦆',name:'Duck',latin:'Homo Corporatus Disillusionis',tags:['protagonista','remote lover'],
-   habitat:'Scrivania in fondo alla stanza, Teams sempre aperta, microfono sempre mutato.',
-   tratti:'Ha partecipato a Halloween contest, tornei e aperitivi. Ora la sua attività principale è prendere per il culo chi ci crede ancora e invidiare chi lavora meno o guadagna di più.',
-   diagnosi:'È il protagonista perché siamo tutti un po\' Duck. Non è cinismo — è il risultato naturale di anni passati ad accumulare aspettative e vederle ridimensionate.',
-   capo:'"ci penso domani" (23:47) → "ne parliamo in call" (giorno dopo). La call non è mai stata fissata.'},
-  {id:'002',emoji:'🦤',name:'Dodo',latin:'Homo Anxiosus Innamoratus',tags:['agorafobico','romantico seriale'],
-   habitat:'Casa con Duck. Va in ufficio ogni giorno — tranne quando ci sono all hands.',
-   tratti:'Terrore dell\'estinzione per AI e licenziamenti. Innamoramento fulminante ogni settimana: basta una porta tenuta aperta o un sorriso in ascensore.',
-   diagnosi:'Il Dodo storico si è estinto perché non aveva predatori naturali. Questo ne vede troppi, tutti immaginari, e li vede ovunque.',
-   capo:'Ha aperto un sondaggio su #general: "l\'AI sostituirà gli inside sales entro 2 anni?" Ha votato Sì.'},
-  {id:'003',emoji:'🦜',name:'Kiwi',latin:'Homo Gossipus Energeticus',tags:['client success','gossipparo'],
-   habitat:'Client Success — i risultati dipendono dalle relazioni. Questo lo rende più umano e più pericoloso.',
-   tratti:'Sa tutto di tutti, sempre prima. Ancora entusiasta degli eventi aziendali. Preso per il culo da Duck e Dodo.',
-   diagnosi:'Il pappagallo ripete. Kiwi seleziona, contestualizza, distribuisce. In un\'azienda dove la conoscenza è potere, lui è la rete elettrica.',
-   capo:'Sapeva del reorg tre settimane prima. Non ha detto niente a nessuno — tranne a tutti, uno alla volta, sotto giuramento.'},
-  {id:'004',emoji:'🦊',name:'Fox',latin:'Vulpes Performativa Chirurgica',tags:['top performer','inafferrabile'],
-   habitat:'Mai nella top 1, sempre nella top 3. Lo spazio tra primo e secondo posto è il suo habitat.',
-   tratti:'Porta risultati. Non risponde mai a "come fai?". Risposta: "questione di organizzazione".',
-   diagnosi:'Non è il secchione — è l\'evoluzione. Ha capito che la vera carriera si costruisce nella penombra della competenza.',
-   capo:'500 chiamate e 2000 email a settimana. Quando qualcuno ha chiesto come facesse, ha sorriso e offerto un caffè.'},
-  {id:'005',emoji:'🦣',name:'Mammut',latin:'Homo Veteranus Immobilis',tags:['longevo','calzini colorati'],
-   habitat:'Ovunque — era lì prima del logo attuale, prima della macchinetta, probabilmente prima del CEO.',
-   tratti:'Risponde con storie dal \'97. Calzini colorati: martedì gialli, giovedì bordeaux. Non dà risposte — dà contesti.',
-   diagnosi:'Sa tutto di un mondo che non esiste più. Scambia l\'esperienza per saggezza universale. Sopravvive perché ricorda gli errori di tutti.',
-   capo:'Workshop sull\'innovazione: 12 minuti di microfono, canederli del 2003, cliente tedesco. Nessuno ha capito il collegamento.'},
-  {id:'006',emoji:'🐈',name:'Il Nuovo',latin:'Homo Altrove Facebamus',tags:['confrontatore','in valutazione'],
-   habitat:'Corridoi, pranzi dei primi mesi, ogni riunione dove si parla di processi.',
-   tratti:'"Da noi in [azienda precedente] avevamo un approccio diverso" — sette minuti di spiegazione. L\'azienda cambia taglia a seconda dell\'interlocutore.',
-   diagnosi:'Non è snobismo — è paura. Il proprio status precedente è l\'unica moneta spendibile immediatamente.',
-   capo:'"In Google facevano così nel 2019." Stage di 3 mesi in un\'agenzia con Google come cliente.'},
-  {id:'007',emoji:'☀️',name:'Il Visionario',latin:'Homo Disruptivus Perpetuus',tags:['cambio di paradigma','vision 2030'],
-   habitat:'Town hall, riunioni strategiche. Scompare quando qualcuno dice "chi fa cosa entro quando".',
-   tratti:'Ogni settimana ha un\'idea che "cambia tutto". La settimana dopo non se ne parla più. Usa "ecosistema" per dire "gruppo".',
-   diagnosi:'Ha capito che questo ruolo esiste, viene pagato, e non richiede mai di dimostrare niente di concreto.',
-   capo:'Crisi per ritardo di 3 settimane: 40 slide sulla vision 2030. Slide 2: foto di una foresta al tramonto.'},
-  {id:'008',emoji:'🐬',name:'Il Perennemente Occupato',latin:'Homo Busyus Apparentivus',tags:['visibilità > risultati','deep work vuoto'],
-   habitat:'Corridoi percorsi con passo deciso verso destinazioni imprecisate.',
-   tratti:'Laptop a 45°. Calendario blindato. Risponde al management in 4 minuti, agli altri in 3 giorni.',
-   diagnosi:'Adattamento perfetto a organizzazioni che misurano la presenza invece dei risultati.',
-   capo:'Si è offerto per un progetto inesistente con deadline impossibile. Gli è stato detto sì. Era l\'unico sorpreso.'},
-  {id:'009',emoji:'🐙',name:'Il CC-Dipendente',latin:'Homo CarbonCopia Compulsivus',tags:['reply all','FYI = problema tuo'],
-   habitat:'Ogni thread con più di due destinatari — che è il suo modo di dire tutti i thread.',
-   tratti:'"Metto in loop anche [nome]" — con il tono di chi risolve. Sta creando tre problemi nuovi.',
-   diagnosi:'Ha imparato che più persone sanno, meno chiunque è responsabile. Risposta evolutiva logica.',
-   capo:'Reply All su 30 persone: "Grazie mille!" Il punto esclamativo è parte integrante del capolavoro.'},
-  {id:'010',emoji:'🪸',name:'Il Facilitatore',latin:'Homo Alignmentus Perpetuus',tags:['allineamento','ci aggiorneremo'],
-   habitat:'Sale riunioni senza agenda. Prenotate per un\'ora, occupate per un\'ora e quaranta.',
-   tratti:'Non prende mai posizione. Usa "allineamento" 4 volte per riunione. Chiude con "ci aggiorneremo".',
-   diagnosi:'Chi decide può sbagliare. Chi facilita non sbaglia mai. Il sistema lo ha selezionato e replicato.',
-   capo:'Ha organizzato una riunione per decidere quando fare la riunione su come migliorare le riunioni.'},
-  {id:'011',emoji:'📨',name:'Il Delegatore Seriale',latin:'Homo Delegatus Compulsivus',tags:['FYI','ottimo lavoro team'],
-   habitat:'Centro dell\'organigramma — abbastanza in alto da ricevere tutto, abbastanza laterale da non fare niente.',
-   tratti:'Forward entro 4 minuti. Record: ha aggiunto solo "FYI" — sigla per "questo è un problema tuo".',
-   diagnosi:'Il lavoro e il merito del lavoro sono cose separate. Si è specializzato nella seconda.',
-   capo:'Ha delegato la sua autovalutazione annuale. L\'HR ha approvato. Feedback: "ottima capacità di valorizzare il team".'},
-  {id:'012',emoji:'🦎',name:'Il Camaleonte',latin:'Homo Hierarchicus Selektivus',tags:['due versioni','proattività selettiva'],
-   habitat:'Due habitat: dove c\'è il management, e tutto il resto.',
-   tratti:'Con il management: "noi del team abbiamo lavorato". Con i colleghi: "mi serve entro domani". Stessa persona, due firmware.',
-   diagnosi:'Non ha inventato le regole. Le ha lette meglio degli altri.',
-   capo:'Ha presentato come propria un\'iniziativa che aveva ostacolato per 3 mesi. Il collega era in riunione. Ha annuito.'},
-  {id:'013',emoji:'🐦‍⬛',name:'Il Convocatore',latin:'Homo Calendarius Invasivus',tags:['nessuna agenda','sync post-sync'],
-   habitat:'Vive nel calendario altrui. Il proprio è sorprendentemente libero.',
-   tratti:'Non propone orari. Blocca. Oggetto: "Sync". Nessuna agenda. La riunione finisce senza decisioni. Arriva il follow-up.',
-   diagnosi:'Convinzione che il proprio tempo e quello degli altri siano due cose diverse.',
-   capo:'"Allineamento strategico Q3" — 2 ore, 9 persone, nessuna agenda. Ha aperto con "volevo che ci confrontassimo un po\'".'},
+const DEX=[
+  {id:'001',emoji:'🦆',name:'Duck',latin:'Homo Corporatus Disillusionis',tags:['protagonista','remote lover'],habitat:'Scrivania in fondo alla stanza, Teams sempre aperta, microfono sempre mutato.',tratti:'Ha partecipato a Halloween contest, tornei e aperitivi. Ora la sua attività principale è prendere per il culo chi ci crede ancora e invidiare chi lavora meno o guadagna di più.',diagnosi:'È il protagonista perché siamo tutti un po\' Duck. Non è cinismo — è il risultato naturale di anni passati ad accumulare aspettative e vederle ridimensionate.',capo:'"ci penso domani" (23:47) → "ne parliamo in call" (giorno dopo). La call non è mai stata fissata.'},
+  {id:'002',emoji:'🦤',name:'Dodo',latin:'Homo Anxiosus Innamoratus',tags:['agorafobico','romantico seriale'],habitat:'Casa con Duck. Va in ufficio ogni giorno — tranne quando ci sono all hands.',tratti:'Terrore dell\'estinzione per AI e licenziamenti. Innamoramento fulminante ogni settimana: basta una porta tenuta aperta o un sorriso in ascensore.',diagnosi:'Il Dodo storico si è estinto perché non aveva predatori naturali. Questo ne vede troppi, tutti immaginari, e li vede ovunque.',capo:'Ha aperto un sondaggio su #general: "l\'AI sostituirà gli inside sales entro 2 anni?" Ha votato Sì.'},
+  {id:'003',emoji:'🐦',name:'Kiwi',latin:'Homo Gossipus Energeticus',tags:['client success','gossipparo'],habitat:'Client Success — i risultati dipendono dalle relazioni. Questo lo rende più umano e più pericoloso.',tratti:'Sa tutto di tutti, sempre prima. Ancora entusiasta degli eventi aziendali. Preso per il culo da Duck e Dodo.',diagnosi:'Il pappagallo ripete. Kiwi seleziona, contestualizza, distribuisce. In un\'azienda dove la conoscenza è potere, lui è la rete elettrica.',capo:'Sapeva del reorg tre settimane prima. Non ha detto niente a nessuno — tranne a tutti, uno alla volta, sotto giuramento.'},
+  {id:'004',emoji:'🦊',name:'Fox',latin:'Vulpes Performativa Chirurgica',tags:['top performer','inafferrabile'],habitat:'Mai nella top 1, sempre nella top 3. Lo spazio tra primo e secondo posto è il suo habitat.',tratti:'Porta risultati. Non risponde mai a "come fai?". Risposta: "questione di organizzazione".',diagnosi:'Non è il secchione — è l\'evoluzione. Ha capito che la vera carriera si costruisce nella penombra della competenza.',capo:'500 chiamate e 2000 email a settimana. Quando qualcuno ha chiesto come facesse, ha sorriso e offerto un caffè.'},
+  {id:'005',emoji:'🦩',name:'Flamingo',latin:'Contentus Aestheticus Vacuus',tags:['content manager','esteticamente impeccabile'],habitat:'Marketing — dove tutto è brand e niente è sostanza.',tratti:'Esteticamente impeccabile, professionalmente vuota. Tutto è content — anche la riunione di bilancio. Canva meglio di Figma.',diagnosi:'In un mondo che misura il like, chi fa bello vince su chi fa giusto.',capo:'"We need more storytelling 🌸 Anche — qualcuno può sistemare il font?"'},
+  {id:'006',emoji:'🦣',name:'Mammoth',latin:'Homo Veteranus Immobilis',tags:['longevo','calzini colorati'],habitat:'Ovunque — era lì prima del logo attuale, prima della macchinetta, probabilmente prima del CEO.',tratti:'Risponde con storie dal \'97. Calzini colorati: martedì gialli, giovedì bordeaux. Non dà risposte — dà contesti.',diagnosi:'Sa tutto di un mondo che non esiste più. Scambia l\'esperienza per saggezza universale. Sopravvive perché ricorda gli errori di tutti.',capo:'Workshop sull\'innovazione: 12 minuti di microfono, canederli del 2003, cliente tedesco. Nessuno ha capito il collegamento.'},
+  {id:'007',emoji:'🐈',name:'Il Nuovo',latin:'Homo Altrove Facebamus',tags:['confrontatore','in valutazione'],habitat:'Corridoi, pranzi dei primi mesi, ogni riunione dove si parla di processi.',tratti:'"Da noi in [azienda precedente] avevamo un approccio diverso" — sette minuti di spiegazione. L\'azienda cambia taglia a seconda dell\'interlocutore.',diagnosi:'Non è snobismo — è paura. Il proprio status precedente è l\'unica moneta spendibile immediatamente.',capo:'"In Google facevano così nel 2019." Stage di 3 mesi in un\'agenzia con Google come cliente.'},
+  {id:'008',emoji:'☀️',name:'Il Visionario',latin:'Homo Disruptivus Perpetuus',tags:['cambio di paradigma','vision 2030'],habitat:'Town hall, riunioni strategiche. Scompare quando qualcuno dice "chi fa cosa entro quando".',tratti:'Ogni settimana ha un\'idea che "cambia tutto". La settimana dopo non se ne parla più. Usa "ecosistema" per dire "gruppo".',diagnosi:'Ha capito che questo ruolo esiste, viene pagato, e non richiede mai di dimostrare niente di concreto.',capo:'Crisi per ritardo di 3 settimane: 40 slide sulla vision 2030. Slide 2: foto di una foresta al tramonto.'},
+  {id:'009',emoji:'🐬',name:'Il Perennemente Occupato',latin:'Homo Busyus Apparentivus',tags:['visibilità > risultati','deep work vuoto'],habitat:'Corridoi percorsi con passo deciso verso destinazioni imprecisate.',tratti:'Laptop a 45°. Calendario blindato. Risponde al management in 4 minuti, agli altri in 3 giorni.',diagnosi:'Adattamento perfetto a organizzazioni che misurano la presenza invece dei risultati.',capo:'Si è offerto per un progetto inesistente con deadline impossibile. Gli è stato detto sì. Era l\'unico sorpreso.'},
+  {id:'010',emoji:'🐙',name:'Il CC-Dipendente',latin:'Homo CarbonCopia Compulsivus',tags:['reply all','FYI = problema tuo'],habitat:'Ogni thread con più di due destinatari — che è il suo modo di dire tutti i thread.',tratti:'"Metto in loop anche [nome]" — con il tono di chi risolve. Sta creando tre problemi nuovi.',diagnosi:'Ha imparato che più persone sanno, meno chiunque è responsabile. Risposta evolutiva logica.',capo:'Reply All su 30 persone: "Grazie mille!" Il punto esclamativo è parte integrante del capolavoro.'},
+  {id:'011',emoji:'🪸',name:'Il Facilitatore',latin:'Homo Alignmentus Perpetuus',tags:['allineamento','ci aggiorneremo'],habitat:'Sale riunioni senza agenda. Prenotate per un\'ora, occupate per un\'ora e quaranta.',tratti:'Non prende mai posizione. Usa "allineamento" 4 volte per riunione. Chiude con "ci aggiorneremo".',diagnosi:'Chi decide può sbagliare. Chi facilita non sbaglia mai. Il sistema lo ha selezionato e replicato.',capo:'Ha organizzato una riunione per decidere quando fare la riunione su come migliorare le riunioni.'},
+  {id:'012',emoji:'📨',name:'Il Delegatore Seriale',latin:'Homo Delegatus Compulsivus',tags:['FYI','ottimo lavoro team'],habitat:'Centro dell\'organigramma — abbastanza in alto da ricevere tutto, abbastanza laterale da non fare niente.',tratti:'Forward entro 4 minuti. Record: ha aggiunto solo "FYI" — sigla per "questo è un problema tuo".',diagnosi:'Il lavoro e il merito del lavoro sono cose separate. Si è specializzato nella seconda.',capo:'Ha delegato la sua autovalutazione annuale. L\'HR ha approvato. Feedback: "ottima capacità di valorizzare il team".'},
+  {id:'013',emoji:'🦎',name:'Il Camaleonte',latin:'Homo Hierarchicus Selektivus',tags:['due versioni','proattività selettiva'],habitat:'Due habitat: dove c\'è il management, e tutto il resto.',tratti:'Con il management: "noi del team abbiamo lavorato". Con i colleghi: "mi serve entro domani". Stessa persona, due firmware.',diagnosi:'Non ha inventato le regole. Le ha lette meglio degli altri.',capo:'Ha presentato come propria un\'iniziativa che aveva ostacolato per 3 mesi. Il collega era in riunione. Ha annuito.'},
+  {id:'014',emoji:'🐦‍⬛',name:'Il Convocatore',latin:'Homo Calendarius Invasivus',tags:['nessuna agenda','sync post-sync'],habitat:'Vive nel calendario altrui. Il proprio è sorprendentemente libero.',tratti:'Non propone orari. Blocca. Oggetto: "Sync". Nessuna agenda. La riunione finisce senza decisioni. Arriva il follow-up.',diagnosi:'Convinzione che il proprio tempo e quello degli altri siano due cose diverse.',capo:'"Allineamento strategico Q3" — 2 ore, 9 persone, nessuna agenda. Ha aperto con "volevo che ci confrontassimo un po\'".'},
 ];
 
-const dexGrid = document.getElementById('dexGrid');
-const dexPanel = document.getElementById('dexPanel');
-let activeDexIdx = -1;
-
-DEX.forEach((d,i) => {
-  const card = document.createElement('div');
+const dexGrid=document.getElementById('dexGrid');
+const dexPanel=document.getElementById('dexPanel');
+let activeDexIdx=-1;
+DEX.forEach((d,i)=>{
+  const card=document.createElement('div');
   card.className='dex-card';
   card.innerHTML=`<div class="dex-num">#${d.id}</div><span class="dex-emoji">${d.emoji}</span><div class="dex-name">${d.name}</div><div class="dex-latin">${d.latin}</div>`;
   card.onclick=()=>openDex(i,card);
   dexGrid.appendChild(card);
 });
 dexGrid.after(dexPanel);
-
 function openDex(i,card){
   if(activeDexIdx===i){closeDex();return;}
   activeDexIdx=i;
@@ -485,291 +705,51 @@ function openDex(i,card){
   dexPanel.classList.add('open');
   setTimeout(()=>dexPanel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 }
-function closeDex(){
-  activeDexIdx=-1;
-  dexPanel.classList.remove('open');
-  document.querySelectorAll('.dex-card').forEach(c=>c.classList.remove('active'));
-}
+function closeDex(){activeDexIdx=-1;dexPanel.classList.remove('open');document.querySelectorAll('.dex-card').forEach(c=>c.classList.remove('active'));}
 
-// ====== SLACK CHANNELS ======
-function switchCh(ch, el){
+// ====== SLACK ======
+function switchCh(ch,el){
   document.querySelectorAll('.channel-content').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.s-item').forEach(e=>e.classList.remove('active'));
-  const t=document.getElementById('ch-'+ch);
-  if(t) t.classList.add('active');
-  if(el) el.classList.add('active');
+  const t=document.getElementById('ch-'+ch);if(t)t.classList.add('active');if(el)el.classList.add('active');
 }
 
-// ====== GAME ENGINE ======
+// ====== GAME ======
 const canvas=document.getElementById('gameCanvas');
 const ctx=canvas.getContext('2d');
-const TW=32, COLS=25, ROWS=12;
-
-const MAP=[
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
-  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,4,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,4,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1],
-  [1,0,4,0,0,0,0,0,0,0,0,0,3,0,0,1,0,0,0,0,0,0,4,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
-  [1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1],
-];
-
-const ENEMY_DEFS=[
-  {emoji:'🪸',name:'IL FACILITATORE',sx:8,sy:5,maxHp:30,
-   intro:['Un Facilitatore ti blocca!','"Siamo tutti allineati su questo?"'],
-   moves:['AGENDA CONDIVISA','CI AGGIORNEREMO','QUICK SYNC?','SIAMO ALLINEATI?']},
-  {emoji:'🐙',name:'IL CC-DIPENDENTE',sx:16,sy:3,maxHp:25,
-   intro:['Un CC-Dipendente ti intercetta!','"Metto in loop anche te, per completezza."'],
-   moves:['REPLY ALL','METTO IN LOOP','FWD+FYI','CC AL CAPO']},
-  {emoji:'🦎',name:'IL CAMALEONTE',sx:5,sy:8,maxHp:35,
-   intro:['Il Camaleonte ti blocca!','"Ah, Duck! Stavo proprio pensando a te..."'],
-   moves:['NOI DEL TEAM','OTTIMA SINERGIA','QUICK CATCH-UP?','HAI VISTO IL BOSS?']},
-  {emoji:'🐬',name:'IL PERENNEMENTE OCCUPATO',sx:19,sy:6,maxHp:20,
-   intro:['Il Perennemente Occupato appare!','"Due minuti, ho una cosa urgente."'],
-   moves:['PERIODO INTENSO','CALL URGENTE','DELIVERABLE','FOLLOW-UP?']},
-  {emoji:'☀️',name:'IL VISIONARIO',sx:11,sy:9,maxHp:40,
-   intro:['Il Visionario ti ferma!','"Ho un\'idea che cambia TUTTO."'],
-   moves:['CAMBIO PARADIGMA','ECOSISTEMA','VISION 2030','DISRUPTIVE!']},
-];
-
-const ACTIONS=[
-  {label:'IGNORARE',sub:'sembra maleducato',
-   exec:(e)=>{const d=rnd(3,10);e.hp=Math.max(0,e.hp-d);return[`Fai finta di non sentire.`,`${e.name} perde ${d} HP di interesse!`];}},
-  {label:'HO UNA CALL',sub:'sempre efficace',
-   exec:(e)=>{const d=rnd(8,18);e.hp=Math.max(0,e.hp-d);return[`"Scusa, ho una call tra 30 secondi."`,`CRITICO! ${e.name} perde ${d} HP!`];}},
-  {label:'MANDO UNA MAIL',sub:'differisce il problema',
-   exec:(e)=>{const d=rnd(2,7);e.hp=Math.max(0,e.hp-d);return[`"Ti mando i dettagli via mail."`,`${e.name} perde ${d} HP. Aspetta risposta.`];}},
-  {label:'FUGGIRE',sub:'50% di successo',
-   exec:(e)=>{if(Math.random()>.5)return['__ESCAPE__'];return[`Non riesci a scappare!`,`${e.name} ti blocca ancora.`];}},
-];
-
+const TW=32,COLS=25,ROWS=12;
+const MAP=[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[1,0,4,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,4,0,1],[1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1],[1,0,4,0,0,0,0,0,0,0,0,0,3,0,0,1,0,0,0,0,0,0,4,0,1],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,2,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1]];
+const ENEMY_DEFS=[{emoji:'🪸',name:'IL FACILITATORE',sx:8,sy:5,maxHp:30,intro:['Un Facilitatore ti blocca!','"Siamo tutti allineati su questo?"'],moves:['AGENDA CONDIVISA','CI AGGIORNEREMO','QUICK SYNC?','SIAMO ALLINEATI?']},{emoji:'🐙',name:'IL CC-DIPENDENTE',sx:16,sy:3,maxHp:25,intro:['Un CC-Dipendente ti intercetta!','"Metto in loop anche te, per completezza."'],moves:['REPLY ALL','METTO IN LOOP','FWD+FYI','CC AL CAPO']},{emoji:'🦎',name:'IL CAMALEONTE',sx:5,sy:8,maxHp:35,intro:['Il Camaleonte ti blocca!','"Ah, Duck! Stavo proprio pensando a te..."'],moves:['NOI DEL TEAM','OTTIMA SINERGIA','QUICK CATCH-UP?','HAI VISTO IL BOSS?']},{emoji:'🐬',name:'IL PERENNEMENTE OCCUPATO',sx:19,sy:6,maxHp:20,intro:['Il Perennemente Occupato appare!','"Due minuti, ho una cosa urgente."'],moves:['PERIODO INTENSO','CALL URGENTE','DELIVERABLE','FOLLOW-UP?']},{emoji:'☀️',name:'IL VISIONARIO',sx:11,sy:9,maxHp:40,intro:['Il Visionario ti ferma!','"Ho un\'idea che cambia TUTTO."'],moves:['CAMBIO PARADIGMA','ECOSISTEMA','VISION 2030','DISRUPTIVE!']}];
+const ACTIONS=[{exec:(e)=>{const d=rnd(3,10);e.hp=Math.max(0,e.hp-d);return[`Fai finta di non sentire.`,`${e.name} perde ${d} HP di interesse!`];}},{exec:(e)=>{const d=rnd(8,18);e.hp=Math.max(0,e.hp-d);return[`"Scusa, ho una call tra 30 secondi."`,`CRITICO! ${e.name} perde ${d} HP!`];}},{exec:(e)=>{const d=rnd(2,7);e.hp=Math.max(0,e.hp-d);return[`"Ti mando i dettagli via mail."`,`${e.name} perde ${d} HP. Aspetta risposta.`];}},{exec:(e)=>{if(Math.random()>.5)return['__ESCAPE__'];return[`Non riesci a scappare!`,`${e.name} ti blocca ancora.`];}}];
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-
-let gState='start'; // start playing battle win lose
-let player={x:1,y:5};
-let enemies=[];
-let curEnemy=null;
-let battlePhase='player';
-let lives=3, ticks=0;
-let rafId=null;
-
-function initGame(){
-  player={x:1,y:5};
-  enemies=ENEMY_DEFS.map(e=>({...e,hp:e.maxHp,alive:true,x:e.sx,y:e.sy,mt:0}));
-  lives=3; ticks=0; gState='playing';
-  document.getElementById('battleOverlay').classList.remove('active');
-  document.getElementById('endScreen').classList.remove('active');
-  updateHUD();
-}
-
-function updateHUD(){
-  const m=Math.floor(ticks/3600), s=Math.floor((ticks%3600)/60);
-  document.getElementById('g-time').textContent=`18:${String(m).padStart(2,'0')}`;
-  document.getElementById('g-hp').textContent='❤️'.repeat(Math.max(0,lives));
-}
-
-function isWall(x,y){
-  if(x<0||y<0||x>=COLS||y>=ROWS)return true;
-  return MAP[y][x]===1||MAP[y][x]===2||MAP[y][x]===4;
-}
+let gState='start',player={x:1,y:5},enemies=[],curEnemy=null,battlePhase='player',lives=3,ticks=0;
+function initGame(){player={x:1,y:5};enemies=ENEMY_DEFS.map(e=>({...e,hp:e.maxHp,alive:true,x:e.sx,y:e.sy,mt:0}));lives=3;ticks=0;gState='playing';document.getElementById('battleOverlay').classList.remove('active');document.getElementById('endScreen').classList.remove('active');updateHUD();}
+function updateHUD(){document.getElementById('g-time').textContent=`18:${String(Math.floor(ticks/3600)).padStart(2,'0')}`;document.getElementById('g-hp').textContent='❤️'.repeat(Math.max(0,lives));}
+function isWall(x,y){if(x<0||y<0||x>=COLS||y>=ROWS)return true;return MAP[y][x]===1||MAP[y][x]===2||MAP[y][x]===4;}
 function isExit(x,y){return MAP[y]&&MAP[y][x]===3;}
-
-function move(dx,dy){
-  if(gState!=='playing')return;
-  const nx=player.x+dx,ny=player.y+dy;
-  if(isWall(nx,ny))return;
-  if(isExit(nx,ny)){endGame(true);return;}
-  const hit=enemies.find(e=>e.alive&&e.x===nx&&e.y===ny);
-  if(hit){beginBattle(hit);return;}
-  player.x=nx;player.y=ny;
-}
-
-function endGame(win){
-  gState=win?'win':'lose';
-  const es=document.getElementById('endScreen');
-  es.classList.add('active');
-  if(win){
-    document.getElementById('end-title').textContent='SEI LIBERO! 🎉';
-    document.getElementById('end-title').className='end-title win';
-    document.getElementById('end-msg').textContent='Hai raggiunto l\'uscita.\nSopravvissuto a un altro giovedì in CorpZoo.\n\nDomani si ricomincia.';
-  } else {
-    document.getElementById('end-title').textContent='INTRAPPOLATO! 💀';
-    document.getElementById('end-title').className='end-title lose';
-    document.getElementById('end-msg').textContent='Sei rimasto intrappolato.\nHanno organizzato un\'altra riunione su come ottimizzare le riunioni.\n\nSei ancora lì.';
-  }
-}
-
-function beginBattle(e){
-  gState='battle'; curEnemy=e; battlePhase='player';
-  document.getElementById('battleOverlay').classList.add('active');
-  document.getElementById('b-name').textContent=e.name;
-  document.getElementById('b-sprite').textContent=e.emoji;
-  refreshBattleHP();
-  setDialog(e.intro[0]+'\n'+e.intro[1]);
-  setActions(true);
-}
-
-function refreshBattleHP(){
-  const e=curEnemy;
-  const p=(e.hp/e.maxHp)*100;
-  document.getElementById('b-hpnum').textContent=e.hp;
-  const bar=document.getElementById('b-hpbar');
-  bar.style.width=p+'%';
-  bar.className='hp-fill'+(p<30?' low':p<60?' mid':'');
-}
-
+function move(dx,dy){if(gState!=='playing')return;const nx=player.x+dx,ny=player.y+dy;if(isWall(nx,ny))return;if(isExit(nx,ny)){endGame(true);return;}const hit=enemies.find(e=>e.alive&&e.x===nx&&e.y===ny);if(hit){beginBattle(hit);return;}player.x=nx;player.y=ny;}
+function endGame(win){gState=win?'win':'lose';const es=document.getElementById('endScreen');es.classList.add('active');if(win){document.getElementById('end-title').textContent='SEI LIBERO! 🎉';document.getElementById('end-title').className='end-title win';document.getElementById('end-msg').textContent='Hai raggiunto l\'uscita.\nSopravvissuto a un altro giovedì in Cordial Inc.\n\nDomani si ricomincia.';}else{document.getElementById('end-title').textContent='INTRAPPOLATO! 💀';document.getElementById('end-title').className='end-title lose';document.getElementById('end-msg').textContent='Sei rimasto intrappolato.\nHanno organizzato un\'altra riunione su come ottimizzare le riunioni.\n\nSei ancora lì.';}}
+function beginBattle(e){gState='battle';curEnemy=e;battlePhase='player';document.getElementById('battleOverlay').classList.add('active');document.getElementById('b-name').textContent=e.name;document.getElementById('b-sprite').textContent=e.emoji;refreshBattleHP();setDialog(e.intro[0]+'\n'+e.intro[1]);setActions(true);}
+function refreshBattleHP(){const p=(curEnemy.hp/curEnemy.maxHp)*100;document.getElementById('b-hpnum').textContent=curEnemy.hp;const bar=document.getElementById('b-hpbar');bar.style.width=p+'%';bar.className='hp-fill'+(p<30?' low':p<60?' mid':'');}
 function setDialog(t){document.getElementById('b-dialog').textContent=t;}
 function setActions(on){['ba0','ba1','ba2','ba3'].forEach(id=>document.getElementById(id).disabled=!on);}
-
-function doAction(idx){
-  if(battlePhase!=='player')return;
-  battlePhase='wait'; setActions(false);
-  const res=ACTIONS[idx].exec(curEnemy);
-  if(res[0]==='__ESCAPE__'){
-    setDialog('Sei riuscito a scappare di corsa!');
-    setTimeout(()=>closeBattle(),1200);
-    return;
-  }
-  setDialog(res.join('\n'));
-  refreshBattleHP();
-  if(curEnemy.hp<=0){
-    setTimeout(()=>{
-      setDialog(curEnemy.name+' si arrende.\n"Ci aggiorneremo!" — e finalmente se ne va.');
-      setTimeout(()=>closeBattle(),1400);
-    },700);
-    return;
-  }
-  // enemy attacks
-  setTimeout(()=>{
-    const mv=curEnemy.moves[Math.floor(Math.random()*curEnemy.moves.length)];
-    const dmg=Math.random()<0.4?1:0;
-    if(dmg){
-      lives=Math.max(0,lives-1); updateHUD();
-      if(lives<=0){endGame(false);return;}
-      setDialog(curEnemy.name+' usa '+mv+'!\nPerdi 1 ❤️ — hai sprecato 40 minuti.');
-    } else {
-      setDialog(curEnemy.name+' usa '+mv+'!\nTieni duro. Che stress però.');
-    }
-    setTimeout(()=>{battlePhase='player';setActions(true);},1000);
-  },900);
-}
-
-function closeBattle(){
-  curEnemy.alive=false;
-  document.getElementById('battleOverlay').classList.remove('active');
-  gState='playing';
-}
-
+function doAction(idx){if(battlePhase!=='player')return;battlePhase='wait';setActions(false);const res=ACTIONS[idx].exec(curEnemy);if(res[0]==='__ESCAPE__'){setDialog('Sei riuscito a scappare di corsa!');setTimeout(()=>closeBattle(),1200);return;}setDialog(res.join('\n'));refreshBattleHP();if(curEnemy.hp<=0){setTimeout(()=>{setDialog(curEnemy.name+' si arrende.\n"Ci aggiorneremo!" — e finalmente se ne va.');setTimeout(()=>closeBattle(),1400);},700);return;}setTimeout(()=>{const mv=curEnemy.moves[Math.floor(Math.random()*curEnemy.moves.length)];const dmg=Math.random()<0.4?1:0;if(dmg){lives=Math.max(0,lives-1);updateHUD();if(lives<=0){endGame(false);return;}setDialog(curEnemy.name+' usa '+mv+'!\nPerdi 1 ❤️ — hai sprecato 40 minuti.');}else{setDialog(curEnemy.name+' usa '+mv+'!\nTieni duro. Che stress però.');}setTimeout(()=>{battlePhase='player';setActions(true);},1000);},900);}
+function closeBattle(){curEnemy.alive=false;document.getElementById('battleOverlay').classList.remove('active');gState='playing';}
 function restartGame(){initGame();}
-
-// ---- RENDER ----
 let frame=0;
-const FLOOR='#2a5218',WALL='#162c0c',DESK='#5a3a1a',PLANT='#1a4a0a';
-
+const FLOOR='#2a5218',WALL='#162c0c';
 function draw(){
-  frame++;
-  ctx.fillStyle='#0a0a0a';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  if(gState==='start'){
-    ctx.fillStyle='#f5c842';
-    ctx.font='12px "Press Start 2P"';
-    ctx.textAlign='center';
-    ctx.fillText('DUCK ESCAPE',canvas.width/2,canvas.height/2-30);
-    ctx.fillStyle='#f5f0e8';
-    ctx.font='8px "Press Start 2P"';
-    ctx.fillText('SPAZIO per iniziare',canvas.width/2,canvas.height/2+10);
-    ctx.fillText('Raggiungi la 🚪 uscita',canvas.width/2,canvas.height/2+35);
-    ctx.fillStyle='rgba(245,200,66,'+(0.4+0.3*Math.sin(frame*.06))+')';
-    ctx.fillText('Evita i colleghi corporate',canvas.width/2,canvas.height/2+60);
-    return;
-  }
-
-  // draw map
-  for(let r=0;r<ROWS;r++){
-    for(let c=0;c<COLS;c++){
-      const t=MAP[r][c];
-      ctx.fillStyle=t===0?FLOOR:t===1?WALL:t===2?DESK:t===4?PLANT:'#1a8a50';
-      ctx.fillRect(c*TW,r*TW,TW,TW);
-      if(t===3){
-        // pulsing exit
-        ctx.fillStyle=`rgba(45,190,108,${0.3+0.3*Math.sin(frame*.1)})`;
-        ctx.fillRect(c*TW,r*TW,TW,TW);
-        ctx.font='18px serif';
-        ctx.textAlign='center';
-        ctx.fillText('🚪',c*TW+TW/2,r*TW+TW*.78);
-      }
-      if(t===2){ctx.font='14px serif';ctx.textAlign='center';ctx.fillText('🖥️',c*TW+TW/2,r*TW+TW*.75);}
-      if(t===4){ctx.font='16px serif';ctx.textAlign='center';ctx.fillText('🌿',c*TW+TW/2,r*TW+TW*.75);}
-    }
-  }
-
-  // subtle grid
-  ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=.5;
-  for(let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*TW,0);ctx.lineTo(i*TW,ROWS*TW);ctx.stroke();}
-  for(let i=0;i<=ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*TW);ctx.lineTo(COLS*TW,i*TW);ctx.stroke();}
-
-  // enemies
-  enemies.forEach(e=>{
-    if(!e.alive)return;
-    // patrol
-    if(gState==='playing'){
-      e.mt=(e.mt||0)+1;
-      if(e.mt>90){
-        e.mt=0;
-        const dirs=[[1,0],[-1,0],[0,1],[0,-1]];
-        const [dx,dy]=dirs[Math.floor(Math.random()*4)];
-        const nx=e.x+dx,ny=e.y+dy;
-        if(!isWall(nx,ny)&&!isExit(nx,ny)){{e.x=nx;e.y=ny;}}
-      }
-    }
-    const bob=Math.sin(frame*.1+e.sx)*2;
-    ctx.font='20px serif';ctx.textAlign='center';
-    ctx.fillText(e.emoji,e.x*TW+TW/2,e.y*TW+TW*.75+bob);
-    // hp bar
-    ctx.fillStyle='#600';ctx.fillRect(e.x*TW,e.y*TW-5,TW,3);
-    ctx.fillStyle='#2dbe6c';ctx.fillRect(e.x*TW,e.y*TW-5,TW*(e.hp/e.maxHp),3);
-  });
-
-  // player
-  const pb=Math.sin(frame*.18)*1.5;
-  ctx.font='20px serif';ctx.textAlign='center';
-  ctx.fillText('🦆',player.x*TW+TW/2,player.y*TW+TW*.75+pb);
-  // player indicator
-  ctx.fillStyle='rgba(245,200,66,.5)';
-  ctx.fillRect(player.x*TW+4,player.y*TW-4,TW-8,3);
-
+  frame++;ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(gState==='start'){ctx.fillStyle='#f5c842';ctx.font='12px "Press Start 2P"';ctx.textAlign='center';ctx.fillText('DUCK ESCAPE',canvas.width/2,canvas.height/2-30);ctx.fillStyle='#f5f0e8';ctx.font='8px "Press Start 2P"';ctx.fillText('SPAZIO per iniziare',canvas.width/2,canvas.height/2+10);ctx.fillText('Raggiungi la 🚪 uscita',canvas.width/2,canvas.height/2+35);ctx.fillStyle=`rgba(245,200,66,${0.4+0.3*Math.sin(frame*.06)})`;ctx.fillText('Evita i colleghi di Cordial Inc.',canvas.width/2,canvas.height/2+60);return;}
+  for(let r=0;r<ROWS;r++){for(let c=0;c<COLS;c++){const t=MAP[r][c];ctx.fillStyle=t===0?FLOOR:t===1?WALL:t===2?'#5a3a1a':t===4?'#1a4a0a':'#1a8a50';ctx.fillRect(c*TW,r*TW,TW,TW);if(t===3){ctx.fillStyle=`rgba(45,190,108,${0.3+0.3*Math.sin(frame*.1)})`;ctx.fillRect(c*TW,r*TW,TW,TW);ctx.font='18px serif';ctx.textAlign='center';ctx.fillText('🚪',c*TW+TW/2,r*TW+TW*.78);}if(t===2){ctx.font='14px serif';ctx.textAlign='center';ctx.fillText('🖥️',c*TW+TW/2,r*TW+TW*.75);}if(t===4){ctx.font='16px serif';ctx.textAlign='center';ctx.fillText('🌿',c*TW+TW/2,r*TW+TW*.75);}}}
+  ctx.strokeStyle='rgba(0,0,0,.25)';ctx.lineWidth=.5;for(let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*TW,0);ctx.lineTo(i*TW,ROWS*TW);ctx.stroke();}for(let i=0;i<=ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*TW);ctx.lineTo(COLS*TW,i*TW);ctx.stroke();}
+  enemies.forEach(e=>{if(!e.alive)return;if(gState==='playing'){e.mt=(e.mt||0)+1;if(e.mt>90){e.mt=0;const dirs=[[1,0],[-1,0],[0,1],[0,-1]];const[dx,dy]=dirs[Math.floor(Math.random()*4)];const nx=e.x+dx,ny=e.y+dy;if(!isWall(nx,ny)&&!isExit(nx,ny)){e.x=nx;e.y=ny;}}}const bob=Math.sin(frame*.1+e.sx)*2;ctx.font='20px serif';ctx.textAlign='center';ctx.fillText(e.emoji,e.x*TW+TW/2,e.y*TW+TW*.75+bob);ctx.fillStyle='#600';ctx.fillRect(e.x*TW,e.y*TW-5,TW,3);ctx.fillStyle='#2dbe6c';ctx.fillRect(e.x*TW,e.y*TW-5,TW*(e.hp/e.maxHp),3);});
+  const pb=Math.sin(frame*.18)*1.5;ctx.font='20px serif';ctx.textAlign='center';ctx.fillText('🦆',player.x*TW+TW/2,player.y*TW+TW*.75+pb);ctx.fillStyle='rgba(245,200,66,.5)';ctx.fillRect(player.x*TW+4,player.y*TW-4,TW-8,3);
   if(gState==='playing'){ticks++;if(ticks%60===0)updateHUD();}
-  if(gState!=='win'&&gState!=='lose') requestAnimationFrame(draw);
+  if(gState!=='win'&&gState!=='lose')requestAnimationFrame(draw);
 }
-
-// controls
-document.addEventListener('keydown',e=>{
-  if(gState==='start'&&e.code==='Space'){initGame();requestAnimationFrame(draw);return;}
-  if(gState!=='playing')return;
-  if(e.code==='ArrowUp'||e.code==='KeyW'){e.preventDefault();move(0,-1);}
-  if(e.code==='ArrowDown'||e.code==='KeyS'){e.preventDefault();move(0,1);}
-  if(e.code==='ArrowLeft'||e.code==='KeyA'){e.preventDefault();move(-1,0);}
-  if(e.code==='ArrowRight'||e.code==='KeyD'){e.preventDefault();move(1,0);}
-});
-
-// touch
-let ts=null;
-canvas.addEventListener('touchstart',e=>{ts={x:e.touches[0].clientX,y:e.touches[0].clientY};e.preventDefault();},{passive:false});
-canvas.addEventListener('touchend',e=>{
-  if(!ts)return;
-  const dx=e.changedTouches[0].clientX-ts.x,dy=e.changedTouches[0].clientY-ts.y;
-  if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1,0);
-  else move(0,dy>0?1:-1);
-  ts=null;
-},{passive:false});
-
+document.addEventListener('keydown',e=>{if(gState==='start'&&e.code==='Space'){initGame();requestAnimationFrame(draw);return;}if(gState!=='playing')return;if(e.code==='ArrowUp'||e.code==='KeyW'){e.preventDefault();move(0,-1);}if(e.code==='ArrowDown'||e.code==='KeyS'){e.preventDefault();move(0,1);}if(e.code==='ArrowLeft'||e.code==='KeyA'){e.preventDefault();move(-1,0);}if(e.code==='ArrowRight'||e.code==='KeyD'){e.preventDefault();move(1,0);}});
+let ts=null;canvas.addEventListener('touchstart',e=>{ts={x:e.touches[0].clientX,y:e.touches[0].clientY};e.preventDefault();},{passive:false});canvas.addEventListener('touchend',e=>{if(!ts)return;const dx=e.changedTouches[0].clientX-ts.x,dy=e.changedTouches[0].clientY-ts.y;if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1,0);else move(0,dy>0?1:-1);ts=null;},{passive:false});
 requestAnimationFrame(draw);
 </script>
 </body>
