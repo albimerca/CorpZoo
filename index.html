@@ -547,228 +547,205 @@ const ORG = {
   ]
 };
 
-// ---- Layout constants ----
-const CW = 104, CH = 110; // card width/height
-const HGAP = 10;          // horizontal gap between cards
-const LINE = '#444';
+// ---- Fixed layout constants (all in px at scale=1) ----
+const CW=110, CH=118, HGAP=12, DEPT_GAP=18;
+const LINE='#444';
 
-const panel = document.getElementById('orgPanel');
-let activeOrgCard = null;
+// Row Y tops
+const ROW_FOUND = 0;
+const ROW_CEO   = ROW_FOUND + CH + 50;
+const ROW_OWL   = ROW_CEO + CH + 60;   // Owl sits BELOW CEO, same tier as C-levels conceptually but offset
+const ROW_CL    = ROW_CEO + CH + 50;   // C-levels start here
+const DEPT_BAR_Y= ROW_CL + CH + 30;
+const DEPT_LBL_Y= DEPT_BAR_Y + 20;
+const ROW_DEPT  = DEPT_LBL_Y + 22;
 
+// Dept col widths
+function deptW(d){ return d.members.length*CW+(d.members.length-1)*HGAP; }
+const totalDeptW = ORG.depts.reduce((s,d)=>s+deptW(d),0)+(ORG.depts.length-1)*DEPT_GAP;
+const N_CL = ORG.clevels.length;
+const totalCLW  = N_CL*CW+(N_CL-1)*HGAP;
+
+// Canvas width: dept row + left margin for Owl
+const OWL_W   = CW + 60;  // space reserved left of clevels for Owl
+const MAIN_W  = Math.max(totalDeptW, totalCLW);
+const TOTAL_W = MAIN_W + OWL_W + 40;
+const TOTAL_H = ROW_DEPT + CH + 30;
+
+// X origin of the "main" (centered) area
+const MAIN_X  = OWL_W + 20;
+const MAIN_CX = MAIN_X + MAIN_W/2;
+
+// Founder
+const FOUND_X = MAIN_CX - CW/2;
+
+// CEO
+const CEO_X   = MAIN_CX - CW/2;
+const CEO_CX  = MAIN_CX;
+
+// C-levels
+const CL_X0  = MAIN_CX - totalCLW/2;
+
+// Dept cols
+let deptCols=[];
+let dx = MAIN_CX - totalDeptW/2;
+ORG.depts.forEach(d=>{ deptCols.push({dept:d, x:dx, w:deptW(d)}); dx+=deptW(d)+DEPT_GAP; });
+
+// Owl — left of the main area, vertically between CEO and C-levels
+const OWL_X  = 20;
+const OWL_Y  = ROW_CL;           // same row as C-levels
+const OWL_CX = OWL_X + CW/2;
+const OWL_CY_TOP = OWL_Y;        // top of Owl card
+
+// ---- SVG lines ----
+const lines=[];
+const L=(x1,y1,x2,y2)=>lines.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${LINE}" stroke-width="1.5"/>`);
+
+// Founder → CEO
+L(MAIN_CX, ROW_FOUND+CH, MAIN_CX, ROW_CEO);
+
+// CEO → mid point → spread to C-levels
+const CL_MID_Y = ROW_CEO + CH + 25;
+L(MAIN_CX, ROW_CEO+CH, MAIN_CX, CL_MID_Y);
+
+const CL_LEFT_CX  = CL_X0 + CW/2;
+const CL_RIGHT_CX = CL_X0 + (N_CL-1)*(CW+HGAP) + CW/2;
+L(CL_LEFT_CX, CL_MID_Y, CL_RIGHT_CX, CL_MID_Y);
+ORG.clevels.forEach((_,i)=>{ const cx=CL_X0+i*(CW+HGAP)+CW/2; L(cx,CL_MID_Y,cx,ROW_CL); });
+
+// Owl: dashed line from CEO down-left to Owl (advisor style)
+// horizontal from CEO-CX at CL_MID_Y leftward to Owl_CX, then down to Owl top
+const OWL_LINE = '#555';
+lines.push(`<line x1="${OWL_CX.toFixed(1)}" y1="${CL_MID_Y.toFixed(1)}" x2="${CL_LEFT_CX.toFixed(1)}" y2="${CL_MID_Y.toFixed(1)}" stroke="${OWL_LINE}" stroke-width="1" stroke-dasharray="5,3"/>`);
+lines.push(`<line x1="${OWL_CX.toFixed(1)}" y1="${CL_MID_Y.toFixed(1)}" x2="${OWL_CX.toFixed(1)}" y2="${OWL_Y.toFixed(1)}" stroke="${OWL_LINE}" stroke-width="1" stroke-dasharray="5,3"/>`);
+
+// Staff label for Owl connector
+lines.push(`<text x="${((OWL_CX+CL_LEFT_CX)/2).toFixed(1)}" y="${(CL_MID_Y-6).toFixed(1)}" fill="#555" font-size="9" font-family="Space Mono,monospace" text-anchor="middle">advisor</text>`);
+
+// C-levels → dept bar
+const D_LEFT_CX  = deptCols[0].x + deptW(ORG.depts[0])/2;
+const D_RIGHT_CX = deptCols[deptCols.length-1].x + deptW(ORG.depts[deptCols.length-1])/2;
+L(D_LEFT_CX, DEPT_BAR_Y, D_RIGHT_CX, DEPT_BAR_Y);
+ORG.clevels.forEach((_,i)=>{ const cx=CL_X0+i*(CW+HGAP)+CW/2; L(cx,ROW_CL+CH,cx,DEPT_BAR_Y); });
+
+// Dept bar → each dept col → members
+deptCols.forEach(({dept,x,w})=>{
+  const dCX=x+w/2;
+  L(dCX,DEPT_BAR_Y,dCX,ROW_DEPT);
+  if(dept.members.length>1){
+    const mL=x+CW/2, mR=x+(dept.members.length-1)*(CW+HGAP)+CW/2;
+    const mBarY=ROW_DEPT-18;
+    L(dCX,DEPT_BAR_Y,dCX,mBarY);
+    L(mL,mBarY,mR,mBarY);
+    dept.members.forEach((_,mi)=>{ L(x+mi*(CW+HGAP)+CW/2,mBarY,x+mi*(CW+HGAP)+CW/2,ROW_DEPT); });
+  }
+});
+
+// ---- DOM ----
+const panel=document.getElementById('orgPanel');
+let activeOrgCard=null;
 function tagClass(t){return t==='prot'?'t-prot':t==='mystery'?'t-mystery':t==='staff'?'t-staff':'t-npc';}
 function tagLabel(t){return t==='prot'?'★ Prot.':t==='mystery'?'???':t==='staff'?'Staff':'NPC';}
 
 function makeCard(p){
-  const d = document.createElement('div');
-  d.className = 'org-card '+(p.type==='staff'?'staff-type':p.type);
-  d.style.cssText = `position:absolute;width:${CW}px;`;
-  d.innerHTML = `<span class="org-emoji">${p.emoji}</span><div class="org-name">${p.name}</div><div class="org-role">${p.role}</div><span class="org-tag ${tagClass(p.type)}">${tagLabel(p.type)}</span>`;
-  d.onclick = () => openOrg(p, d);
+  const d=document.createElement('div');
+  d.className='org-card '+(p.type==='staff'?'staff-type':p.type);
+  d.style.cssText=`position:absolute;width:${CW}px;`;
+  d.innerHTML=`<span class="org-emoji">${p.emoji}</span><div class="org-name">${p.name}</div><div class="org-role">${p.role}</div><span class="org-tag ${tagClass(p.type)}">${tagLabel(p.type)}</span>`;
+  d.onclick=()=>openOrg(p,d);
   return d;
 }
+function place(card,x,y){card.style.left=x+'px';card.style.top=y+'px';wrap.appendChild(card);}
 
-function openOrg(p, cardEl){
+function openOrg(p,cardEl){
   if(activeOrgCard===cardEl){closeOrg();return;}
-  if(activeOrgCard) activeOrgCard.classList.remove('active');
-  activeOrgCard = cardEl; cardEl.classList.add('active');
-  document.getElementById('op-emoji').textContent = p.emoji;
-  document.getElementById('op-name').textContent = p.name;
-  document.getElementById('op-latin').textContent = p.latin;
-  document.getElementById('op-ruolo').textContent = p.ruolo;
-  document.getElementById('op-tratti').textContent = p.tratti;
-  document.getElementById('op-diagnosi').textContent = p.diagnosi;
-  document.getElementById('op-capo').textContent = p.capo;
-  document.getElementById('op-tags').innerHTML = `<span class="ptag">${p.role}</span><span class="ptag">${tagLabel(p.type)}</span>`;
+  if(activeOrgCard)activeOrgCard.classList.remove('active');
+  activeOrgCard=cardEl;cardEl.classList.add('active');
+  document.getElementById('op-emoji').textContent=p.emoji;
+  document.getElementById('op-name').textContent=p.name;
+  document.getElementById('op-latin').textContent=p.latin;
+  document.getElementById('op-ruolo').textContent=p.ruolo;
+  document.getElementById('op-tratti').textContent=p.tratti;
+  document.getElementById('op-diagnosi').textContent=p.diagnosi;
+  document.getElementById('op-capo').textContent=p.capo;
+  document.getElementById('op-tags').innerHTML=`<span class="ptag">${p.role}</span><span class="ptag">${tagLabel(p.type)}</span>`;
   panel.classList.add('open');
   setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 }
-window.closeOrg = function(){
-  panel.classList.remove('open');
-  if(activeOrgCard) activeOrgCard.classList.remove('active');
-  activeOrgCard = null;
-};
+window.closeOrg=function(){panel.classList.remove('open');if(activeOrgCard)activeOrgCard.classList.remove('active');activeOrgCard=null;};
 
-// ---- Compute layout ----
-// Each dept col width = max(members) * (CW+HGAP) - HGAP
-function deptColW(dept){
-  const n = dept.members.length;
-  return n * CW + (n-1) * HGAP;
-}
+// Outer scroll container
+const container=document.getElementById('orgTree');
+container.innerHTML='';
 
-const DEPT_GAP = 16;
-const totalDeptW = ORG.depts.reduce((s,d)=>s+deptColW(d),0) + (ORG.depts.length-1)*DEPT_GAP;
+// Zoom controls
+const zoomBar=document.createElement('div');
+zoomBar.style.cssText='display:flex;gap:8px;align-items:center;margin-bottom:20px;font-family:var(--mono);font-size:11px;color:#666;';
+zoomBar.innerHTML=`
+  <button onclick="orgZoom(-0.1)" style="font-family:var(--pixel);font-size:9px;padding:6px 12px;border:1px solid #444;background:transparent;color:#f5f0e8;cursor:pointer;">— zoom out</button>
+  <span id="orgZoomLabel" style="min-width:40px;text-align:center;color:#f5c842;">100%</span>
+  <button onclick="orgZoom(+0.1)" style="font-family:var(--pixel);font-size:9px;padding:6px 12px;border:1px solid #444;background:transparent;color:#f5f0e8;cursor:pointer;">+ zoom in</button>
+  <button onclick="orgZoomReset()" style="font-family:var(--pixel);font-size:9px;padding:6px 12px;border:1px solid #333;background:transparent;color:#666;cursor:pointer;">reset</button>
+`;
+container.appendChild(zoomBar);
 
-// C-levels row: 5 cards
-const N_CL = ORG.clevels.length;
-const totalCLW = N_CL * CW + (N_CL-1) * HGAP;
+// Scrollable viewport
+const viewport=document.createElement('div');
+viewport.style.cssText='overflow-x:auto;overflow-y:hidden;width:100%;';
 
-// Canvas width = max of dept row and clevel row + some padding
-const SIDE_PAD = 20;
-const W = Math.max(totalDeptW, totalCLW) + SIDE_PAD*2;
+// Scalable inner wrapper
+const scaler=document.createElement('div');
+scaler.id='orgScaler';
+scaler.style.cssText='transform-origin:top left;transition:transform .2s;';
 
-// Row Y positions (top of each card)
-const ROW_FOUND = 0;
-const V1 = 40;  // founder → CEO
-const ROW_CEO = ROW_FOUND + CH + V1;
-const V2 = 40;  // CEO → clevels
-const ROW_CL = ROW_CEO + CH + V2;
-const V3 = 60;  // clevels → dept labels
-const DEPT_LABEL_Y = ROW_CL + CH + V3;
-const V4 = 28;
-const ROW_DEPT = DEPT_LABEL_Y + V4;
+const wrap=document.createElement('div');
+wrap.style.cssText=`position:relative;width:${TOTAL_W}px;height:${TOTAL_H}px;`;
 
-// Staff card sits at same Y as CEO, to the left
-const STAFF_X = 10;
-const STAFF_Y = ROW_CEO;
-
-// Total canvas height
-const totalH = ROW_DEPT + CH + 20;
-
-// X center of canvas
-const CX = W / 2;
-
-// founder center
-const FOUND_X = CX - CW/2;
-
-// CEO center
-const CEO_X = CX - CW/2;
-
-// C-levels: centered
-const CL_START_X = CX - totalCLW/2;
-
-// Dept cols: centered
-const DEPT_START_X = CX - totalDeptW/2;
-
-// Compute dept col centers
-let deptCols = [];
-let dx = DEPT_START_X;
-ORG.depts.forEach(dept => {
-  const w = deptColW(dept);
-  deptCols.push({ dept, x: dx, w });
-  dx += w + DEPT_GAP;
-});
-
-// Build SVG lines
-const lines = [];
-const stroke = (x1,y1,x2,y2) => lines.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${LINE}" stroke-width="1"/>`);
-
-// Founder → CEO
-const foundCX = FOUND_X + CW/2;
-stroke(foundCX, ROW_FOUND+CH, foundCX, ROW_CEO);
-
-// CEO → Staff (horizontal to staff card right edge)
-const ceoCX = CEO_X + CW/2;
-const staffCX = STAFF_X + CW/2;
-const staffMidY = STAFF_Y + CH/2;
-// horizontal line from staff center to CEO center at mid-height between CEO bottom and clevel top
-const ceoStaffY = ROW_CEO + CH/2;
-stroke(STAFF_X+CW, ceoStaffY, ceoCX, ceoStaffY);  // horizontal
-stroke(STAFF_X+CW/2, STAFF_Y+CH, STAFF_X+CW/2, ceoStaffY); // down from staff bottom
-stroke(ceoCX, ROW_CEO+CH, ceoCX, ROW_CEO+CH+V2/2); // CEO down to mid
-
-// Actually: CEO → horizontal bar → each clevel
-const ceoMidY = ROW_CEO + CH + V2/2;
-// vertical from CEO bottom to horizontal bar
-stroke(ceoCX, ROW_CEO+CH, ceoCX, ceoMidY);
-
-// horizontal bar spanning all clevels
-const cl_leftCX = CL_START_X + CW/2;
-const cl_rightCX = CL_START_X + (N_CL-1)*(CW+HGAP) + CW/2;
-stroke(cl_leftCX, ceoMidY, cl_rightCX, ceoMidY);
-
-// Owl lateral connection: horizontal line from owl right to clevel bar start
-stroke(STAFF_X+CW, ceoStaffY, cl_leftCX, ceoStaffY);
-stroke(cl_leftCX, ceoStaffY, cl_leftCX, ceoMidY);
-
-// each clevel down from bar
-ORG.clevels.forEach((cl,i) => {
-  const clx = CL_START_X + i*(CW+HGAP) + CW/2;
-  stroke(clx, ceoMidY, clx, ROW_CL);
-});
-
-// clevels → dept horizontal bar
-const deptMidY = ROW_CL + CH + V3/2;
-const d_leftCX = deptCols[0].x + deptColW(ORG.depts[0])/2;
-const d_rightCX = deptCols[deptCols.length-1].x + deptColW(ORG.depts[deptCols.length-1])/2;
-stroke(d_leftCX, deptMidY, d_rightCX, deptMidY);
-
-// each clevel down to dept bar
-ORG.clevels.forEach((cl,i) => {
-  const clx = CL_START_X + i*(CW+HGAP) + CW/2;
-  stroke(clx, ROW_CL+CH, clx, deptMidY);
-});
-
-// each dept up from bar + down to members
-deptCols.forEach(({dept, x, w}) => {
-  const dCX = x + w/2;
-  stroke(dCX, deptMidY, dCX, ROW_DEPT);
-
-  // horizontal bar over members if >1
-  if(dept.members.length > 1){
-    const m_leftCX = x + CW/2;
-    const m_rightCX = x + (dept.members.length-1)*(CW+HGAP) + CW/2;
-    const mBarY = ROW_DEPT - 16;
-    stroke(dCX, ROW_DEPT, dCX, mBarY);
-    stroke(m_leftCX, mBarY, m_rightCX, mBarY);
-    dept.members.forEach((_,mi) => {
-      const mx = x + mi*(CW+HGAP) + CW/2;
-      stroke(mx, mBarY, mx, ROW_DEPT);
-    });
-  }
-});
-
-// ---- Build DOM ----
-const container = document.getElementById('orgTree');
-container.style.cssText = `position:relative;overflow-x:auto;`;
-
-const wrap = document.createElement('div');
-wrap.style.cssText = `position:relative;width:${W}px;height:${totalH}px;margin:0 auto;`;
-
-// SVG lines layer
-const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-svg.setAttribute('width', W);
-svg.setAttribute('height', totalH);
-svg.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;';
-svg.innerHTML = lines.join('');
+// SVG
+const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+svg.setAttribute('width',TOTAL_W);svg.setAttribute('height',TOTAL_H);
+svg.style.cssText='position:absolute;top:0;left:0;pointer-events:none;';
+svg.innerHTML=lines.join('');
 wrap.appendChild(svg);
 
-// Place cards
-function place(card, x, y){
-  card.style.left = x+'px';
-  card.style.top = y+'px';
-  wrap.appendChild(card);
-}
-
-// Founder
+// Cards
 place(makeCard(ORG.founders[0]), FOUND_X, ROW_FOUND);
+place(makeCard(ORG.ceo[0]),      CEO_X,   ROW_CEO);
+place(makeCard(ORG.staff[0]),    OWL_X,   OWL_Y);
+ORG.clevels.forEach((cl,i)=>place(makeCard(cl), CL_X0+i*(CW+HGAP), ROW_CL));
 
-// CEO
-place(makeCard(ORG.ceo[0]), CEO_X, ROW_CEO);
-
-// Staff (Owl) — left side
-place(makeCard(ORG.staff[0]), STAFF_X, STAFF_Y);
-
-// C-levels
-ORG.clevels.forEach((cl,i) => {
-  place(makeCard(cl), CL_START_X + i*(CW+HGAP), ROW_CL);
-});
-
-// Dept labels + members
-deptCols.forEach(({dept, x, w}) => {
+deptCols.forEach(({dept,x,w})=>{
   // label
-  const lbl = document.createElement('div');
-  lbl.className = 'org-tier-label';
-  lbl.style.cssText = `position:absolute;left:${x}px;top:${DEPT_LABEL_Y}px;width:${w}px;text-align:center;`;
-  lbl.textContent = dept.name;
+  const lbl=document.createElement('div');
+  lbl.className='org-tier-label';
+  lbl.style.cssText=`position:absolute;left:${x}px;top:${DEPT_LBL_Y}px;width:${w}px;text-align:center;`;
+  lbl.textContent=dept.name;
   wrap.appendChild(lbl);
-
-  // members
-  dept.members.forEach((m,mi) => {
-    place(makeCard(m), x + mi*(CW+HGAP), ROW_DEPT);
-  });
+  dept.members.forEach((m,mi)=>place(makeCard(m), x+mi*(CW+HGAP), ROW_DEPT));
 });
 
-container.appendChild(wrap);
+scaler.appendChild(wrap);
+viewport.appendChild(scaler);
+container.appendChild(viewport);
+
+// Zoom logic
+let scale=1;
+function orgZoom(delta){
+  scale=Math.min(1.5,Math.max(0.4,scale+delta));
+  document.getElementById('orgScaler').style.transform=`scale(${scale})`;
+  document.getElementById('orgScaler').style.height=(TOTAL_H*scale)+'px';
+  document.getElementById('orgZoomLabel').textContent=Math.round(scale*100)+'%';
+}
+function orgZoomReset(){scale=1;orgZoom(0);}
+window.orgZoom=orgZoom;
+window.orgZoomReset=orgZoomReset;
+
+// Auto-fit on load
+setTimeout(()=>{
+  const vw=viewport.offsetWidth;
+  if(TOTAL_W>vw){ scale=Math.max(0.4,parseFloat((vw/TOTAL_W).toFixed(2))); orgZoom(0); }
+},100);
+
 })();
 
 // ====== CORPDEX ======
