@@ -460,34 +460,34 @@ const ORG = {
      capo:'"Tecnicamente, non funziona così."'}
   ],
   clevels:[
-    {emoji:'🦈',name:'Shark',role:'VP Sales',dept:'Sales',latin:'Venditor Aggressivus',type:'npc',
+    {emoji:'🦈',name:'Shark',role:'VP Sales',latin:'Venditor Aggressivus',type:'npc',
      ruolo:'VP Sales. Pipeline sempre pieno, anima sempre in muto.',
      tratti:'Se non chiudi entro venerdì, non esisti.',
      diagnosi:'Il fine giustifica i mezzi. I mezzi sono tutti.',
      capo:'"Chiudiamo entro venerdì o non esisti."'},
-    {emoji:'🐦‍⬛',name:'Raven',role:'CPO / HR',dept:'People & Ops',latin:'Nuncius Malarum Novorum',type:'npc',
+    {emoji:'🐦‍⬛',name:'Raven',role:'CPO / HR',latin:'Nuncius Malarum Novorum',type:'npc',
      ruolo:'CPO / HR. Porta sempre cattive notizie con il sorriso.',
      tratti:'Ogni annuncio alle 14 è una sentenza.',
      diagnosi:'Il messaggero sopravvive perché nessuno vuole fare il suo lavoro.',
      capo:'"Abbiamo un annuncio importante alle 14."'},
-    {emoji:'🐊',name:'Croc',role:'CFO',dept:'Finance',latin:'Avarus Brachium-Curtus',type:'npc',
+    {emoji:'🐊',name:'Croc',role:'CFO',latin:'Avarus Brachium-Curtus',type:'npc',
      ruolo:'CFO. Braccio corto. Ogni budget tagliato del 30% per principio.',
      tratti:'Non è nel budget. Mai. Punto.',
      diagnosi:'Il risparmio è un\'ideologia, non una necessità.',
      capo:'"Non è nel budget. Punto."'},
-    {emoji:'🦚',name:'Peacock',role:'CMO',dept:'Marketing',latin:'Brandus Narcissisticus',type:'npc',
+    {emoji:'🦚',name:'Peacock',role:'CMO',latin:'Brandus Narcissisticus',type:'npc',
      ruolo:'CMO. Ogni deck ha 47 slide. Il font è sempre sbagliato.',
      tratti:'L\'awareness è sempre la risposta.',
      diagnosi:'L\'estetica nasconde l\'assenza di strategia.',
      capo:'"Dobbiamo lavorare sull\'awareness."'},
-    {emoji:'🐙',name:'Octopus',role:'CTO',dept:'IT',latin:'Technologus Multitaskus',type:'npc',
+    {emoji:'🐙',name:'Octopus',role:'CTO',latin:'Technologus Multitaskus',type:'npc',
      ruolo:'CTO. Otto cose in parallelo. Quante siano finite: sconosciuto.',
      tratti:'Gestisce tutto simultaneamente, risponde a nessuno in modo completo.',
      diagnosi:'Il multitasking estremo è l\'unico modo per non dover rispondere davvero a niente.',
      capo:'"Sto gestendo. Tutte e otto."'},
   ],
   depts:[
-    {name:'Sales',horizontal:true,members:[
+    {name:'Sales',members:[
       {emoji:'🦆',name:'Duck',role:'Account Exec',latin:'Homo Corporatus Disillusioni',type:'prot',
        ruolo:'Account Executive. Protagonista. Siamo tutti un po\' Duck.',
        tratti:'Ha partecipato a tutto. Ora la sua attività principale è prendere per il culo chi ci crede ancora.',
@@ -504,35 +504,35 @@ const ORG = {
        diagnosi:'L\'energia è reale. La direzione è un concetto astratto.',
        capo:'"sto lavorando su una cosa importante 🙃"'},
     ]},
-    {name:'People & Ops',horizontal:false,members:[
+    {name:'People & Ops',members:[
       {emoji:'🐹',name:'Hamster',role:'HR Specialist',latin:'Activisimus HR-ensis',type:'npc',
        ruolo:'HR Specialist. Organizza corsi di mindfulness che nessuno segue.',
        tratti:'Manda survey sul benessere ogni settimana. Sostiene siano anonimi.',
        diagnosi:'La cura del dipendente è una metrica, non una pratica.',
        capo:'"Avete compilato il survey? È anonimo, lo giuro."'},
     ]},
-    {name:'Finance',horizontal:false,members:[
+    {name:'Finance',members:[
       {emoji:'🦡',name:'Badger',role:'Finance Analyst',latin:'Accountans Paranoicus',type:'npc',
        ruolo:'Finance Analyst. Riconcilia ogni centesimo.',
        tratti:'Conosce le note spese di tutti a memoria.',
        diagnosi:'Il controllo è l\'unica forma di potere rimasta.',
        capo:'"Chi ha speso €3,40 su Bolt il 14 marzo?"'},
     ]},
-    {name:'Marketing',horizontal:false,members:[
+    {name:'Marketing',members:[
       {emoji:'🦩',name:'Flamingo',role:'Content Manager',latin:'Contentus Aestheticus Vacuus',type:'prot',
        ruolo:'Content Manager. Esteticamente impeccabile, professionalmente vuota.',
        tratti:'Tutto è content — anche la riunione di bilancio. Canva meglio di Figma.',
        diagnosi:'In un mondo che misura il like, chi fa bello vince su chi fa giusto.',
        capo:'"We need more storytelling 🌸 Anche — qualcuno può sistemare il font?"'},
     ]},
-    {name:'IT',horizontal:false,members:[
+    {name:'IT',members:[
       {emoji:'🤖',name:'Claudio',role:'IT Support',latin:'Humanus vel Machina?',type:'mystery',
        ruolo:'IT Support. Nessuno sa con certezza se Claudio sia una persona o un\'AI.',
        tratti:'Risponde sempre in modo impeccabile, forse troppo. Non ha mai preso un giorno di malattia.',
        diagnosi:'L\'ambiguità è una feature, non un bug.',
        capo:'"Ciao! Ho già risolto il tuo problema prima che tu lo segnalassi."'},
     ]},
-    {name:'Client Success',horizontal:true,members:[
+    {name:'Client Success',members:[
       {emoji:'🐦',name:'Kiwi',role:'CSM',latin:'Homo Gossipus Energeticus',type:'prot',
        ruolo:'CSM. Sa tutto di tutti. Ancora entusiasta degli eventi aziendali.',
        tratti:'È la rete elettrica dell\'ufficio. Preso per il culo da Duck e Dodo.',
@@ -547,116 +547,228 @@ const ORG = {
   ]
 };
 
-const tree=document.getElementById('orgTree');
-const panel=document.getElementById('orgPanel');
-let activeOrgCard=null;
+// ---- Layout constants ----
+const CW = 104, CH = 110; // card width/height
+const HGAP = 10;          // horizontal gap between cards
+const LINE = '#444';
+
+const panel = document.getElementById('orgPanel');
+let activeOrgCard = null;
 
 function tagClass(t){return t==='prot'?'t-prot':t==='mystery'?'t-mystery':t==='staff'?'t-staff':'t-npc';}
 function tagLabel(t){return t==='prot'?'★ Prot.':t==='mystery'?'???':t==='staff'?'Staff':'NPC';}
 
 function makeCard(p){
-  const d=document.createElement('div');
-  d.className='org-card '+(p.type==='staff'?'staff-type':p.type);
-  d.innerHTML=`<span class="org-emoji">${p.emoji}</span><div class="org-name">${p.name}</div><div class="org-role">${p.role}</div><span class="org-tag ${tagClass(p.type)}">${tagLabel(p.type)}</span>`;
-  d.onclick=()=>openOrg(p,d);
+  const d = document.createElement('div');
+  d.className = 'org-card '+(p.type==='staff'?'staff-type':p.type);
+  d.style.cssText = `position:absolute;width:${CW}px;`;
+  d.innerHTML = `<span class="org-emoji">${p.emoji}</span><div class="org-name">${p.name}</div><div class="org-role">${p.role}</div><span class="org-tag ${tagClass(p.type)}">${tagLabel(p.type)}</span>`;
+  d.onclick = () => openOrg(p, d);
   return d;
 }
-function vl(h){const d=document.createElement('div');d.className='org-vline';if(h)d.style.height=h;return d;}
-function hb(w){const d=document.createElement('div');d.className='org-hbar';if(w)d.style.width=w;return d;}
-function tick(h){const d=document.createElement('div');d.className='org-spread-tick';if(h)d.style.height=h;return d;}
 
-// Founders
-const fr=document.createElement('div');fr.style.cssText='display:flex;justify-content:center;';
-ORG.founders.forEach(p=>fr.appendChild(makeCard(p)));
-tree.appendChild(fr);tree.appendChild(vl('24px'));
-
-// CEO
-const cr=document.createElement('div');cr.style.cssText='display:flex;justify-content:center;';
-ORG.ceo.forEach(p=>cr.appendChild(makeCard(p)));
-tree.appendChild(cr);tree.appendChild(vl('24px'));
-
-// CEO → C-levels spread
-const clN=ORG.clevels.length;
-const spreadWrap=document.createElement('div');
-spreadWrap.style.cssText='width:100%;max-width:660px;margin:0 auto;';
-const topHbar=hb('100%');
-const topTicks=document.createElement('div');
-topTicks.className='org-spread';topTicks.style.width='100%';
-for(let i=0;i<clN;i++)topTicks.appendChild(tick('20px'));
-spreadWrap.appendChild(topHbar);spreadWrap.appendChild(topTicks);
-
-// Chief of Staff lateral + main column wrapper
-const rowWrap=document.createElement('div');
-rowWrap.style.cssText='display:flex;align-items:flex-start;justify-content:center;width:100%;';
-
-const staffSide=document.createElement('div');
-staffSide.style.cssText='display:flex;flex-direction:column;align-items:center;margin-right:12px;';
-staffSide.appendChild(makeCard(ORG.staff[0]));
-
-const mainCol=document.createElement('div');
-mainCol.style.cssText='display:flex;flex-direction:column;align-items:center;flex:1;max-width:660px;';
-mainCol.appendChild(spreadWrap);
-const clevRow=document.createElement('div');clevRow.className='org-clevel-row';
-ORG.clevels.forEach(p=>clevRow.appendChild(makeCard(p)));
-mainCol.appendChild(clevRow);
-
-rowWrap.appendChild(staffSide);rowWrap.appendChild(mainCol);
-tree.appendChild(rowWrap);
-
-// C-levels → depts
-const dN=ORG.depts.length;
-const dTicksWrap=document.createElement('div');
-dTicksWrap.style.cssText='width:100%;max-width:660px;margin:0 auto;';
-const dTopHbar=hb('100%');
-const dTopTicks=document.createElement('div');
-dTopTicks.className='org-spread';dTopTicks.style.width='100%';
-for(let i=0;i<dN;i++)dTopTicks.appendChild(tick('20px'));
-dTicksWrap.appendChild(dTopHbar);dTicksWrap.appendChild(dTopTicks);
-tree.appendChild(dTicksWrap);
-
-// Dept columns
-const deptRow=document.createElement('div');deptRow.className='org-dept-row';
-ORG.depts.forEach(dept=>{
-  const col=document.createElement('div');col.className='org-dept-col';
-  const lbl=document.createElement('div');lbl.className='org-tier-label';
-  lbl.style.cssText='margin-top:12px;margin-bottom:6px;min-width:90px;';lbl.textContent=dept.name;
-  col.appendChild(vl('20px'));col.appendChild(lbl);
-
-  if(dept.horizontal&&dept.members.length>1){
-    const totalW=dept.members.length*100+(dept.members.length-1)*8;
-    const mhb=hb(totalW+'px');
-    const mticks=document.createElement('div');
-    mticks.style.cssText=`display:flex;justify-content:space-between;width:${totalW}px;`;
-    dept.members.forEach(()=>mticks.appendChild(tick('16px')));
-    col.appendChild(mhb);col.appendChild(mticks);
-    const mrow=document.createElement('div');mrow.style.cssText='display:flex;gap:8px;';
-    dept.members.forEach(m=>mrow.appendChild(makeCard(m)));
-    col.appendChild(mrow);
-  } else {
-    const mwrap=document.createElement('div');mwrap.style.cssText='display:flex;flex-direction:column;gap:8px;align-items:center;';
-    dept.members.forEach(m=>mwrap.appendChild(makeCard(m)));
-    col.appendChild(mwrap);
-  }
-  deptRow.appendChild(col);
-});
-tree.appendChild(deptRow);
-
-function openOrg(p,cardEl){
+function openOrg(p, cardEl){
   if(activeOrgCard===cardEl){closeOrg();return;}
-  if(activeOrgCard)activeOrgCard.classList.remove('active');
-  activeOrgCard=cardEl;cardEl.classList.add('active');
-  document.getElementById('op-emoji').textContent=p.emoji;
-  document.getElementById('op-name').textContent=p.name;
-  document.getElementById('op-latin').textContent=p.latin;
-  document.getElementById('op-ruolo').textContent=p.ruolo;
-  document.getElementById('op-tratti').textContent=p.tratti;
-  document.getElementById('op-diagnosi').textContent=p.diagnosi;
-  document.getElementById('op-capo').textContent=p.capo;
-  document.getElementById('op-tags').innerHTML=`<span class="ptag">${p.role}</span><span class="ptag">${tagLabel(p.type)}</span>`;
+  if(activeOrgCard) activeOrgCard.classList.remove('active');
+  activeOrgCard = cardEl; cardEl.classList.add('active');
+  document.getElementById('op-emoji').textContent = p.emoji;
+  document.getElementById('op-name').textContent = p.name;
+  document.getElementById('op-latin').textContent = p.latin;
+  document.getElementById('op-ruolo').textContent = p.ruolo;
+  document.getElementById('op-tratti').textContent = p.tratti;
+  document.getElementById('op-diagnosi').textContent = p.diagnosi;
+  document.getElementById('op-capo').textContent = p.capo;
+  document.getElementById('op-tags').innerHTML = `<span class="ptag">${p.role}</span><span class="ptag">${tagLabel(p.type)}</span>`;
   panel.classList.add('open');
   setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 }
-window.closeOrg=function(){panel.classList.remove('open');if(activeOrgCard)activeOrgCard.classList.remove('active');activeOrgCard=null;};
+window.closeOrg = function(){
+  panel.classList.remove('open');
+  if(activeOrgCard) activeOrgCard.classList.remove('active');
+  activeOrgCard = null;
+};
+
+// ---- Compute layout ----
+// Each dept col width = max(members) * (CW+HGAP) - HGAP
+function deptColW(dept){
+  const n = dept.members.length;
+  return n * CW + (n-1) * HGAP;
+}
+
+const DEPT_GAP = 16;
+const totalDeptW = ORG.depts.reduce((s,d)=>s+deptColW(d),0) + (ORG.depts.length-1)*DEPT_GAP;
+
+// C-levels row: 5 cards
+const N_CL = ORG.clevels.length;
+const totalCLW = N_CL * CW + (N_CL-1) * HGAP;
+
+// Canvas width = max of dept row and clevel row + some padding
+const SIDE_PAD = 20;
+const W = Math.max(totalDeptW, totalCLW) + SIDE_PAD*2;
+
+// Row Y positions (top of each card)
+const ROW_FOUND = 0;
+const V1 = 40;  // founder → CEO
+const ROW_CEO = ROW_FOUND + CH + V1;
+const V2 = 40;  // CEO → clevels
+const ROW_CL = ROW_CEO + CH + V2;
+const V3 = 60;  // clevels → dept labels
+const DEPT_LABEL_Y = ROW_CL + CH + V3;
+const V4 = 28;
+const ROW_DEPT = DEPT_LABEL_Y + V4;
+
+// Staff card sits at same Y as CEO, to the left
+const STAFF_X = 10;
+const STAFF_Y = ROW_CEO;
+
+// Total canvas height
+const totalH = ROW_DEPT + CH + 20;
+
+// X center of canvas
+const CX = W / 2;
+
+// founder center
+const FOUND_X = CX - CW/2;
+
+// CEO center
+const CEO_X = CX - CW/2;
+
+// C-levels: centered
+const CL_START_X = CX - totalCLW/2;
+
+// Dept cols: centered
+const DEPT_START_X = CX - totalDeptW/2;
+
+// Compute dept col centers
+let deptCols = [];
+let dx = DEPT_START_X;
+ORG.depts.forEach(dept => {
+  const w = deptColW(dept);
+  deptCols.push({ dept, x: dx, w });
+  dx += w + DEPT_GAP;
+});
+
+// Build SVG lines
+const lines = [];
+const stroke = (x1,y1,x2,y2) => lines.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${LINE}" stroke-width="1"/>`);
+
+// Founder → CEO
+const foundCX = FOUND_X + CW/2;
+stroke(foundCX, ROW_FOUND+CH, foundCX, ROW_CEO);
+
+// CEO → Staff (horizontal to staff card right edge)
+const ceoCX = CEO_X + CW/2;
+const staffCX = STAFF_X + CW/2;
+const staffMidY = STAFF_Y + CH/2;
+// horizontal line from staff center to CEO center at mid-height between CEO bottom and clevel top
+const ceoStaffY = ROW_CEO + CH/2;
+stroke(STAFF_X+CW, ceoStaffY, ceoCX, ceoStaffY);  // horizontal
+stroke(STAFF_X+CW/2, STAFF_Y+CH, STAFF_X+CW/2, ceoStaffY); // down from staff bottom
+stroke(ceoCX, ROW_CEO+CH, ceoCX, ROW_CEO+CH+V2/2); // CEO down to mid
+
+// Actually: CEO → horizontal bar → each clevel
+const ceoMidY = ROW_CEO + CH + V2/2;
+// vertical from CEO bottom to horizontal bar
+stroke(ceoCX, ROW_CEO+CH, ceoCX, ceoMidY);
+
+// horizontal bar spanning all clevels
+const cl_leftCX = CL_START_X + CW/2;
+const cl_rightCX = CL_START_X + (N_CL-1)*(CW+HGAP) + CW/2;
+stroke(cl_leftCX, ceoMidY, cl_rightCX, ceoMidY);
+
+// Owl lateral connection: horizontal line from owl right to clevel bar start
+stroke(STAFF_X+CW, ceoStaffY, cl_leftCX, ceoStaffY);
+stroke(cl_leftCX, ceoStaffY, cl_leftCX, ceoMidY);
+
+// each clevel down from bar
+ORG.clevels.forEach((cl,i) => {
+  const clx = CL_START_X + i*(CW+HGAP) + CW/2;
+  stroke(clx, ceoMidY, clx, ROW_CL);
+});
+
+// clevels → dept horizontal bar
+const deptMidY = ROW_CL + CH + V3/2;
+const d_leftCX = deptCols[0].x + deptColW(ORG.depts[0])/2;
+const d_rightCX = deptCols[deptCols.length-1].x + deptColW(ORG.depts[deptCols.length-1])/2;
+stroke(d_leftCX, deptMidY, d_rightCX, deptMidY);
+
+// each clevel down to dept bar
+ORG.clevels.forEach((cl,i) => {
+  const clx = CL_START_X + i*(CW+HGAP) + CW/2;
+  stroke(clx, ROW_CL+CH, clx, deptMidY);
+});
+
+// each dept up from bar + down to members
+deptCols.forEach(({dept, x, w}) => {
+  const dCX = x + w/2;
+  stroke(dCX, deptMidY, dCX, ROW_DEPT);
+
+  // horizontal bar over members if >1
+  if(dept.members.length > 1){
+    const m_leftCX = x + CW/2;
+    const m_rightCX = x + (dept.members.length-1)*(CW+HGAP) + CW/2;
+    const mBarY = ROW_DEPT - 16;
+    stroke(dCX, ROW_DEPT, dCX, mBarY);
+    stroke(m_leftCX, mBarY, m_rightCX, mBarY);
+    dept.members.forEach((_,mi) => {
+      const mx = x + mi*(CW+HGAP) + CW/2;
+      stroke(mx, mBarY, mx, ROW_DEPT);
+    });
+  }
+});
+
+// ---- Build DOM ----
+const container = document.getElementById('orgTree');
+container.style.cssText = `position:relative;overflow-x:auto;`;
+
+const wrap = document.createElement('div');
+wrap.style.cssText = `position:relative;width:${W}px;height:${totalH}px;margin:0 auto;`;
+
+// SVG lines layer
+const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+svg.setAttribute('width', W);
+svg.setAttribute('height', totalH);
+svg.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;';
+svg.innerHTML = lines.join('');
+wrap.appendChild(svg);
+
+// Place cards
+function place(card, x, y){
+  card.style.left = x+'px';
+  card.style.top = y+'px';
+  wrap.appendChild(card);
+}
+
+// Founder
+place(makeCard(ORG.founders[0]), FOUND_X, ROW_FOUND);
+
+// CEO
+place(makeCard(ORG.ceo[0]), CEO_X, ROW_CEO);
+
+// Staff (Owl) — left side
+place(makeCard(ORG.staff[0]), STAFF_X, STAFF_Y);
+
+// C-levels
+ORG.clevels.forEach((cl,i) => {
+  place(makeCard(cl), CL_START_X + i*(CW+HGAP), ROW_CL);
+});
+
+// Dept labels + members
+deptCols.forEach(({dept, x, w}) => {
+  // label
+  const lbl = document.createElement('div');
+  lbl.className = 'org-tier-label';
+  lbl.style.cssText = `position:absolute;left:${x}px;top:${DEPT_LABEL_Y}px;width:${w}px;text-align:center;`;
+  lbl.textContent = dept.name;
+  wrap.appendChild(lbl);
+
+  // members
+  dept.members.forEach((m,mi) => {
+    place(makeCard(m), x + mi*(CW+HGAP), ROW_DEPT);
+  });
+});
+
+container.appendChild(wrap);
 })();
 
 // ====== CORPDEX ======
